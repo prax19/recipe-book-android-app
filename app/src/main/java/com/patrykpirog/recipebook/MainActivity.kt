@@ -27,15 +27,7 @@ class MainActivity : ComponentActivity() {
             WindowCompat.setDecorFitsSystemWindows(window, false)
 
             RecipeBookTheme {
-
                 MainNavGraph(navController = navController)
-
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    MainNavGraph(navController = navController)
-//                }
             }
         }
     }

@@ -6,11 +6,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,9 +31,14 @@ fun MainMenuScreen(
 ){
     val bottomNavController = rememberNavController()
     val fabVisibility = remember { mutableStateOf(true) }
+
+
+
     Scaffold(
-        content = { padding ->
-            BottomNavGraph(navController = bottomNavController, padding)
+        modifier = Modifier
+            .fillMaxSize(),
+        content = {
+            BottomNavGraph(navController = bottomNavController, it)
         },
         floatingActionButton = {
             AnimatedVisibility(

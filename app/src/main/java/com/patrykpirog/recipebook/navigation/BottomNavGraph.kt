@@ -10,13 +10,18 @@ import com.patrykpirog.recipebook.screens.RecipesScreen
 import com.patrykpirog.recipebook.screens.SettingsScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, padding: PaddingValues) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    paddingValues: PaddingValues
+) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Recipes.route
     ) {
         composable(route = BottomBarScreen.Recipes.route) {
-            RecipesScreen(padding)
+            RecipesScreen(
+                paddingValues
+            )
         }
         composable(route = BottomBarScreen.Favorites.route) {
             FavoritesScreen()

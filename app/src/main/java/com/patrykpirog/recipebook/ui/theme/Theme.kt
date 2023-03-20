@@ -1,26 +1,9 @@
 package com.patrykpirog.recipebook.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.SystemUiController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -52,33 +35,12 @@ fun RecipeBookTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        dynamicColor -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
-
-    var systemUiController = rememberSystemUiController()
-
-//    systemUiController.setSystemBarsColor(
-//        color = Color.Transparent,
-//        darkIcons = colorScheme.background.luminance() > 0.5,
-//        isNavigationBarContrastEnforced = false,
-//        transformColorForLightContent = {
-//            Color.Black.copy(alpha = 0.7F)
-//        }
-//    )
-
-    systemUiController.setStatusBarColor(colorScheme.surface)
-    systemUiController.setNavigationBarColor(colorScheme.primary.copy(alpha = 0.08f).compositeOver((colorScheme.surface.copy())))
-
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-
-        }
     }
 
     MaterialTheme(

@@ -5,8 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.patrykpirog.recipebook.auth.SignUpScreen
+import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.screens.AddRecipeScreen
 import com.patrykpirog.recipebook.screens.MainMenuScreen
+import com.patrykpirog.recipebook.screens.RecipeScreen
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
@@ -24,6 +26,10 @@ fun MainNavGraph(navController: NavHostController) {
 
         composable(route = MainScreen.AddRecipeScreen.route) {
             AddRecipeScreen(navController)
+        }
+
+        composable(route = MainScreen.RecipeScreen.route) {
+            RecipeScreen(AppModule.recipe!!)
         }
     }
 }

@@ -14,15 +14,22 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.patrykpirog.recipebook.data.Recipe
 import com.patrykpirog.recipebook.di.AppModule
+import com.patrykpirog.recipebook.navigation.MainNavGraph
+import com.patrykpirog.recipebook.navigation.MainScreen
+import javax.annotation.Nullable
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipesScreen(paddingValues: PaddingValues) {
+fun RecipesScreen(
+    paddingValues: PaddingValues,
+    mainNavController: NavController
+) {
     val recipes = remember { loadRecipes() }
     val scrollBehavior =
         exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -57,7 +64,10 @@ fun RecipesScreen(paddingValues: PaddingValues) {
             ) {
                 item {
                     recipes.forEach { recipe ->
-                        RecipeCard(recipe)
+                        RecipeCard(
+                            recipe,
+                            mainNavController
+                        )
                     }
                 }
             }
@@ -69,7 +79,8 @@ fun RecipesScreen(paddingValues: PaddingValues) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeCard(
-    recipe: Recipe
+    recipe: Recipe,
+    mainNavController: NavController? = null
 ) {
     Card(
         modifier = Modifier
@@ -77,7 +88,8 @@ fun RecipeCard(
             .height(160.dp)
             .padding(16.dp, 4.dp),
         onClick = {
-
+            AppModule.recipe = recipe
+            mainNavController?.navigate(MainScreen.RecipeScreen.route)
         }
     ) {
         Column(

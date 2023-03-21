@@ -3,6 +3,7 @@ package com.patrykpirog.recipebook.di
 import com.google.firebase.auth.FirebaseAuth
 import com.patrykpirog.recipebook.data.AuthRepository
 import com.patrykpirog.recipebook.data.AuthRepositoryImpl
+import com.patrykpirog.recipebook.data.Recipe
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +13,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    var recipe: Recipe ?= null
 
     @Provides
     @Singleton

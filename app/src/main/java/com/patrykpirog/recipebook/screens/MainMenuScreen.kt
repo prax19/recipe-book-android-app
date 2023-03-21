@@ -36,7 +36,7 @@ fun MainMenuScreen(
         modifier = Modifier
             .fillMaxSize(),
         content = {
-            BottomNavGraph(navController = bottomNavController, it)
+            BottomNavGraph(navController = bottomNavController, mainNavController, it)
         },
         floatingActionButton = {
             AnimatedVisibility(

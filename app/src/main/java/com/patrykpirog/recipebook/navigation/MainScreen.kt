@@ -20,4 +20,9 @@ sealed class MainScreen(
         title = "Add Recipe"
     )
 
+    object RecipeScreen: MainScreen(
+        route = "recipe",
+        title = "Recipe"
+    )
+
 }

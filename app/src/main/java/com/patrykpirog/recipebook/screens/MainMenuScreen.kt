@@ -32,8 +32,6 @@ fun MainMenuScreen(
     val bottomNavController = rememberNavController()
     val fabVisibility = remember { mutableStateOf(true) }
 
-
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -47,7 +45,9 @@ fun MainMenuScreen(
                 exit = scaleOut()
             ) {
                 FloatingActionButton(
-                    onClick = { mainNavController.navigate(MainScreen.AddRecipeScreen.route) }
+                    onClick = {
+                        mainNavController.navigate(MainScreen.AddRecipeScreen.route)
+                    }
                 ) {
                     Icon(Icons.Default.Add, "Add")
                 }

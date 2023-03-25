@@ -24,39 +24,49 @@ import com.patrykpirog.recipebook.navigation.BottomNavGraph
 import com.patrykpirog.recipebook.navigation.MainScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenuScreen(
-    mainNavController: NavController
+    navController: NavHostController
 ){
-    val bottomNavController = rememberNavController()
-    val fabVisibility = remember { mutableStateOf(true) }
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val bottomController = rememberNavController()
+
     val recipes = remember { loadRecipes() }
+
+    val fabVisibility = remember { mutableStateOf(true) }
+    val topAppBarState = rememberTopAppBarState()
+    val topAppBarTextState = remember { mutableStateOf( BottomBarScreen.Recipes.title ) }
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
 
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MainTopBar(scrollBehavior = scrollBehavior)
+            MainTopBar(
+                scrollBehavior = scrollBehavior,
+                textState = topAppBarTextState
+            )
         },
         content = {
             BottomNavGraph(
-                navController = bottomNavController,
-                mainNavController = mainNavController,
-                paddingValues = it
+                navController = bottomController,
+                mainNavController = navController,
+                paddingValues = it,
+                recipes
             )
         },
         floatingActionButton = {
            MainFab(
-               fabVisibility = fabVisibility.value,
-               mainNavController = mainNavController)
+               mainNavController = navController,
+               fabVisibility = fabVisibility.value)
         },
         bottomBar = {
             MainBottomBar(
-                navController = bottomNavController,
-                fabVisability = fabVisibility
+                navController = bottomController,
+                fabVisability = fabVisibility,
+                topAppBarTextState = topAppBarTextState,
+                topAppBarState = topAppBarState
             )
         },
     )
@@ -65,11 +75,12 @@ fun MainMenuScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    textState: MutableState<String>
 ) {
     LargeTopAppBar(
         title = {
-            Text("Recipes")
+            Text(textState.value)
         },
         scrollBehavior = scrollBehavior
     )
@@ -78,8 +89,8 @@ fun MainTopBar(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainFab(
-    fabVisibility: Boolean,
-    mainNavController: NavController
+    mainNavController: NavController,
+    fabVisibility: Boolean
 ){
     AnimatedVisibility(
         visible = fabVisibility,
@@ -96,9 +107,12 @@ fun MainFab(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
     navController: NavHostController,
+    topAppBarState: TopAppBarState,
+    topAppBarTextState: MutableState<String>,
     fabVisability: MutableState<Boolean>
 ) {
     val screens = listOf(
@@ -114,17 +128,23 @@ fun MainBottomBar(
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController,
-                fabVisability = fabVisability)
+                fabVisability = fabVisability,
+                topAppBarState = topAppBarState,
+                topAppBarTextState = topAppBarTextState
+                )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavHostController,
-    fabVisability: MutableState<Boolean>
+    fabVisability: MutableState<Boolean>,
+    topAppBarState: TopAppBarState,
+    topAppBarTextState: MutableState<String>
 ) {
     NavigationBarItem(
         label = {
@@ -140,7 +160,20 @@ fun RowScope.AddItem(
             it.route == screen.route
         } == true,
         onClick = {
-            fabVisability.value = screen.route == BottomBarScreen.Recipes.route
+            when(screen.route) {
+                BottomBarScreen.Recipes.route -> {
+                    fabVisability.value = true
+                    topAppBarTextState.value = BottomBarScreen.Recipes.title
+                }
+                BottomBarScreen.Favorites.route -> {
+                    fabVisability.value = false
+                    topAppBarTextState.value = BottomBarScreen.Favorites.title
+                }
+                BottomBarScreen.Settings.route -> {
+                    fabVisability.value = false
+                    topAppBarTextState.value = BottomBarScreen.Settings.title
+                }
+            }
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true

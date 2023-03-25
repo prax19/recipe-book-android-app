@@ -11,27 +11,35 @@ import com.patrykpirog.recipebook.screens.MainMenuScreen
 import com.patrykpirog.recipebook.screens.RecipeScreen
 
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
         startDestination = MainScreen.LoginScreen.route
     ) {
         composable(route = MainScreen.LoginScreen.route) {
-            SignUpScreen(navController = navController)
+            SignUpScreen(
+                navController = navController
+            )
         }
 
         composable(route = MainScreen.MainMenu.route) {
-            MainMenuScreen(mainNavController=navController)
+            MainMenuScreen(
+                navController = navController
+            )
         }
 
         composable(route = MainScreen.AddRecipeScreen.route) {
-            AddRecipeScreen(navController)
+            AddRecipeScreen(
+                navController = navController
+            )
         }
 
         composable(route = MainScreen.RecipeScreen.route) {
             RecipeScreen(
-                AppModule.recipe!!,
-                navController
+                navController = navController,
+                AppModule.recipe!!
             )
         }
     }

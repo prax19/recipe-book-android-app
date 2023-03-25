@@ -3,31 +3,23 @@ package com.patrykpirog.recipebook.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.patrykpirog.recipebook.data.Recipe
 import com.patrykpirog.recipebook.di.AppModule
-import com.patrykpirog.recipebook.navigation.MainNavGraph
 import com.patrykpirog.recipebook.navigation.MainScreen
-import javax.annotation.Nullable
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipesScreen(
-    paddingValues: PaddingValues,
     mainNavController: NavController,
+    paddingValues: PaddingValues,
     recipes: MutableList<Recipe>
 ) {
     LazyColumn(

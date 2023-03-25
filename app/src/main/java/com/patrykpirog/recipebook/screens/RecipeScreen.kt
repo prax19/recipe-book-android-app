@@ -18,8 +18,8 @@ import com.patrykpirog.recipebook.data.Recipe
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(
-    recipe: Recipe,
-    navController: NavController? = null
+    navController: NavController? = null,
+    recipe: Recipe
 ){
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())

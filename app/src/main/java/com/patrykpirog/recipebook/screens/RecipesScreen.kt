@@ -24,56 +24,26 @@ import com.patrykpirog.recipebook.navigation.MainScreen
 import javax.annotation.Nullable
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipesScreen(
     paddingValues: PaddingValues,
-    mainNavController: NavController
+    mainNavController: NavController,
+    recipes: MutableList<Recipe>
 ) {
-    val recipes = remember { loadRecipes() }
-    val scrollBehavior =
-        exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    Scaffold(
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                0.dp,
-                0.dp,
-                0.dp,
-                paddingValues.calculateBottomPadding()
-            )
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text("Recipes")
-                },
-                scrollBehavior = scrollBehavior
-            )
-        },
+            .padding( paddingValues),
         content = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        it.calculateStartPadding(LayoutDirection.Ltr),
-                        it.calculateTopPadding(),
-                        it.calculateEndPadding(LayoutDirection.Ltr),
-                        0.dp
+            item {
+                recipes.forEach { recipe ->
+                    RecipeCard(
+                        recipe,
+                        mainNavController
                     )
-            ) {
-                item {
-                    recipes.forEach { recipe ->
-                        RecipeCard(
-                            recipe,
-                            mainNavController
-                        )
-                    }
                 }
             }
         }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

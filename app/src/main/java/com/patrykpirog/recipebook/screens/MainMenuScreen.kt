@@ -6,12 +6,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -31,30 +31,30 @@ fun MainMenuScreen(
 ){
     val bottomNavController = rememberNavController()
     val fabVisibility = remember { mutableStateOf(true) }
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val recipes = remember { loadRecipes() }
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize(),
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            MainTopBar(scrollBehavior = scrollBehavior)
+        },
         content = {
-            BottomNavGraph(navController = bottomNavController, mainNavController, it)
+            BottomNavGraph(
+                navController = bottomNavController,
+                mainNavController = mainNavController,
+                paddingValues = it
+            )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = fabVisibility.value,
-                enter = scaleIn(),
-                exit = scaleOut()
-            ) {
-                FloatingActionButton(
-                    onClick = {
-                        mainNavController.navigate(MainScreen.AddRecipeScreen.route)
-                    }
-                ) {
-                    Icon(Icons.Default.Add, "Add")
-                }
-            }
+           MainFab(
+               fabVisibility = fabVisibility.value,
+               mainNavController = mainNavController)
         },
         bottomBar = {
-            BottomBar(
+            MainBottomBar(
                 navController = bottomNavController,
                 fabVisability = fabVisibility
             )
@@ -62,8 +62,42 @@ fun MainMenuScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(
+fun MainTopBar(
+    scrollBehavior: TopAppBarScrollBehavior
+) {
+    LargeTopAppBar(
+        title = {
+            Text("Recipes")
+        },
+        scrollBehavior = scrollBehavior
+    )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun MainFab(
+    fabVisibility: Boolean,
+    mainNavController: NavController
+){
+    AnimatedVisibility(
+        visible = fabVisibility,
+        enter = scaleIn(),
+        exit = scaleOut()
+    ) {
+        FloatingActionButton(
+            onClick = {
+                mainNavController.navigate(MainScreen.AddRecipeScreen.route)
+            }
+        ) {
+            Icon(Icons.Default.Add, "Add")
+        }
+    }
+}
+
+@Composable
+fun MainBottomBar(
     navController: NavHostController,
     fabVisability: MutableState<Boolean>
 ) {

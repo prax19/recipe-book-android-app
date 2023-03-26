@@ -9,6 +9,7 @@ import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.screens.AddRecipeScreen
 import com.patrykpirog.recipebook.screens.MainMenuScreen
 import com.patrykpirog.recipebook.screens.RecipeScreen
+import com.patrykpirog.recipebook.screens.SettingsScreen
 
 @Composable
 fun MainNavGraph(
@@ -40,6 +41,12 @@ fun MainNavGraph(
             RecipeScreen(
                 navController = navController,
                 AppModule.recipe!!
+            )
+        }
+
+        composable(route = MainScreen.SettingsScreen.route) {
+            SettingsScreen(
+                navController = navController
             )
         }
     }

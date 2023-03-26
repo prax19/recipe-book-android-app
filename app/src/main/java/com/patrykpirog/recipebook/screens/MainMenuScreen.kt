@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.*
@@ -48,6 +49,7 @@ fun MainMenuScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MainTopBar(
+                navController = navController,
                 scrollBehavior = scrollBehavior,
                 textState = topAppBarTextState
             )
@@ -84,12 +86,23 @@ fun MainMenuScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
+    navController: NavHostController,
     scrollBehavior: TopAppBarScrollBehavior,
     textState: MutableState<String>
 ) {
     CenterAlignedTopAppBar(
         title = {
             Text(textState.value)
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    navController.navigate(MainScreen.SettingsScreen.route)
+                },
+                content = {
+                    Icon(Icons.Default.Settings, "App settings")
+                }
+            )
         },
         scrollBehavior = scrollBehavior
     )

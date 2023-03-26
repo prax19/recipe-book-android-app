@@ -25,4 +25,9 @@ sealed class MainScreen(
         title = "Recipe"
     )
 
+    object SettingsScreen: MainScreen(
+        route = "settings",
+        title = "Settings"
+    )
+
 }

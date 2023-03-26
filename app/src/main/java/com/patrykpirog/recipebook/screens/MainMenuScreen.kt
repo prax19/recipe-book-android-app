@@ -5,10 +5,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,7 +41,7 @@ fun MainMenuScreen(
     val topAppBarState = rememberTopAppBarState()
     val topAppBarTextState = remember { mutableStateOf( BottomBarScreen.Recipes.title ) }
     val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+        enterAlwaysScrollBehavior(topAppBarState)
 
     Scaffold(
         modifier = Modifier
@@ -49,12 +53,17 @@ fun MainMenuScreen(
             )
         },
         content = {
-            BottomNavGraph(
-                navController = bottomController,
-                mainNavController = navController,
-                paddingValues = it,
-                recipes
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                BottomNavGraph(
+                    navController = bottomController,
+                    mainNavController = navController,
+                    recipes
+                )
+            }
         },
         floatingActionButton = {
            MainFab(
@@ -68,7 +77,7 @@ fun MainMenuScreen(
                 topAppBarTextState = topAppBarTextState,
                 topAppBarState = topAppBarState
             )
-        },
+        }
     )
 }
 
@@ -78,7 +87,7 @@ fun MainTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     textState: MutableState<String>
 ) {
-    LargeTopAppBar(
+    CenterAlignedTopAppBar(
         title = {
             Text(textState.value)
         },

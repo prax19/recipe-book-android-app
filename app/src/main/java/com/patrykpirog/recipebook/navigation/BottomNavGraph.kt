@@ -1,6 +1,5 @@
 package com.patrykpirog.recipebook.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,7 +13,6 @@ import com.patrykpirog.recipebook.screens.SettingsScreen
 fun BottomNavGraph(
     navController: NavHostController,
     mainNavController: NavHostController,
-    paddingValues: PaddingValues,
     recipes: MutableList<Recipe>
 ) {
     NavHost(
@@ -24,7 +22,6 @@ fun BottomNavGraph(
         composable(route = BottomBarScreen.Recipes.route) {
             RecipesScreen(
                 mainNavController,
-                paddingValues,
                 recipes
             )
         }

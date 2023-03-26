@@ -3,7 +3,6 @@ package com.patrykpirog.recipebook.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
@@ -21,12 +20,6 @@ sealed class BottomBarScreen(
         route = "favorites",
         title = "Favorites",
         icon = Icons.Default.Favorite
-    )
-
-    object Settings: BottomBarScreen(
-        route = "settings",
-        title = "Settings",
-        icon = Icons.Default.Settings
     )
 
 }

@@ -126,8 +126,7 @@ fun MainBottomBar(
 ) {
     val screens = listOf(
         BottomBarScreen.Recipes,
-        BottomBarScreen.Favorites,
-        BottomBarScreen.Settings
+        BottomBarScreen.Favorites
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -177,10 +176,6 @@ fun RowScope.AddItem(
                 BottomBarScreen.Favorites.route -> {
                     fabVisability.value = false
                     topAppBarTextState.value = BottomBarScreen.Favorites.title
-                }
-                BottomBarScreen.Settings.route -> {
-                    fabVisability.value = false
-                    topAppBarTextState.value = BottomBarScreen.Settings.title
                 }
             }
             navController.navigate(screen.route) {

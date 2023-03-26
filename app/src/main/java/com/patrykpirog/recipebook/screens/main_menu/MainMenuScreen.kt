@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens
+package com.patrykpirog.recipebook.screens.main_menu
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.navigation.BottomBarScreen
 import com.patrykpirog.recipebook.navigation.BottomNavGraph
 import com.patrykpirog.recipebook.navigation.MainScreen
+import com.patrykpirog.recipebook.screens.recipes.loadRecipes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

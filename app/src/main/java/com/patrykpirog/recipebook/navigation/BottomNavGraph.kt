@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.patrykpirog.recipebook.data.Recipe
-import com.patrykpirog.recipebook.screens.FavoritesScreen
-import com.patrykpirog.recipebook.screens.RecipesScreen
+import com.patrykpirog.recipebook.screens.favorites.FavoritesScreen
+import com.patrykpirog.recipebook.screens.recipes.RecipesScreen
 
 @Composable
 fun BottomNavGraph(

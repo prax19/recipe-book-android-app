@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.auth
+package com.patrykpirog.recipebook.screens.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -15,8 +15,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.patrykpirog.recipebook.navigation.MainNavGraph
+import com.patrykpirog.recipebook.auth.AuthViewModel
 import com.patrykpirog.recipebook.navigation.MainScreen
 import kotlinx.coroutines.launch
 

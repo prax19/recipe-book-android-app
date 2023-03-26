@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.patrykpirog.recipebook.auth.SignUpScreen
+import com.patrykpirog.recipebook.screens.auth.SignUpScreen
 import com.patrykpirog.recipebook.di.AppModule
-import com.patrykpirog.recipebook.screens.AddRecipeScreen
-import com.patrykpirog.recipebook.screens.MainMenuScreen
-import com.patrykpirog.recipebook.screens.RecipeScreen
-import com.patrykpirog.recipebook.screens.SettingsScreen
+import com.patrykpirog.recipebook.screens.add_recipe.AddRecipeScreen
+import com.patrykpirog.recipebook.screens.main_menu.MainMenuScreen
+import com.patrykpirog.recipebook.screens.recipe.RecipeScreen
+import com.patrykpirog.recipebook.screens.settings.SettingsScreen
 
 @Composable
 fun MainNavGraph(

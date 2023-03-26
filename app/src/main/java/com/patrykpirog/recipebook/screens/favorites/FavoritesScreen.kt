@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens
+package com.patrykpirog.recipebook.screens.favorites
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

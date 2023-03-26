@@ -13,10 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -41,16 +40,16 @@ fun MainMenuScreen(
     val fabVisibility = remember { mutableStateOf(true) }
     val topAppBarState = rememberTopAppBarState()
     val topAppBarTextState = remember { mutableStateOf( BottomBarScreen.Recipes.title ) }
-    val scrollBehavior =
-        enterAlwaysScrollBehavior(topAppBarState)
+//    val scrollBehavior =
+//        enterAlwaysScrollBehavior(topAppBarState)
 
     Scaffold(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+//        modifier = Modifier
+//            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MainTopBar(
                 navController = navController,
-                scrollBehavior = scrollBehavior,
+//                scrollBehavior = scrollBehavior,
                 textState = topAppBarTextState
             )
         },
@@ -58,7 +57,12 @@ fun MainMenuScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(
+                        16.dp,
+                        it.calculateTopPadding(),
+                        16.dp,
+                        it.calculateBottomPadding()
+                    )
             ) {
                 BottomNavGraph(
                     navController = bottomController,
@@ -70,14 +74,15 @@ fun MainMenuScreen(
         floatingActionButton = {
            MainFab(
                mainNavController = navController,
-               fabVisibility = fabVisibility.value)
+               fabVisibility = fabVisibility
+           )
         },
         bottomBar = {
             MainBottomBar(
                 navController = bottomController,
-                fabVisability = fabVisibility,
                 topAppBarTextState = topAppBarTextState,
-                topAppBarState = topAppBarState
+                topAppBarState = topAppBarState,
+                fabVisibility = fabVisibility
             )
         }
     )
@@ -87,7 +92,7 @@ fun MainMenuScreen(
 @Composable
 fun MainTopBar(
     navController: NavHostController,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior? = TopAppBarDefaults.pinnedScrollBehavior(),
     textState: MutableState<String>
 ) {
     CenterAlignedTopAppBar(
@@ -112,10 +117,10 @@ fun MainTopBar(
 @Composable
 fun MainFab(
     mainNavController: NavController,
-    fabVisibility: Boolean
+    fabVisibility: MutableState<Boolean>
 ){
     AnimatedVisibility(
-        visible = fabVisibility,
+        visible = fabVisibility.value,
         enter = scaleIn(),
         exit = scaleOut()
     ) {
@@ -135,7 +140,7 @@ fun MainBottomBar(
     navController: NavHostController,
     topAppBarState: TopAppBarState,
     topAppBarTextState: MutableState<String>,
-    fabVisability: MutableState<Boolean>
+    fabVisibility: MutableState<Boolean>
 ) {
     val screens = listOf(
         BottomBarScreen.Recipes,
@@ -149,10 +154,10 @@ fun MainBottomBar(
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController,
-                fabVisability = fabVisability,
                 topAppBarState = topAppBarState,
-                topAppBarTextState = topAppBarTextState
-                )
+                topAppBarTextState = topAppBarTextState,
+                fabVisibility = fabVisibility
+            )
         }
     }
 }
@@ -163,9 +168,9 @@ fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavHostController,
-    fabVisability: MutableState<Boolean>,
     topAppBarState: TopAppBarState,
-    topAppBarTextState: MutableState<String>
+    topAppBarTextState: MutableState<String>,
+    fabVisibility: MutableState<Boolean>
 ) {
     NavigationBarItem(
         label = {
@@ -183,14 +188,13 @@ fun RowScope.AddItem(
         onClick = {
             when(screen.route) {
                 BottomBarScreen.Recipes.route -> {
-                    fabVisability.value = true
                     topAppBarTextState.value = BottomBarScreen.Recipes.title
                 }
                 BottomBarScreen.Favorites.route -> {
-                    fabVisability.value = false
                     topAppBarTextState.value = BottomBarScreen.Favorites.title
                 }
             }
+            fabVisibility.value = currentDestination?.route != BottomBarScreen.Recipes.route
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true

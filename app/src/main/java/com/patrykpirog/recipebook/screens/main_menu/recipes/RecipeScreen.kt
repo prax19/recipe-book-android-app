@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens
+package com.patrykpirog.recipebook.screens.recipe
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

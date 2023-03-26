@@ -71,6 +71,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.runtime:runtime-tracing:1.0.0-alpha03"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
 
     //Firebase
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'

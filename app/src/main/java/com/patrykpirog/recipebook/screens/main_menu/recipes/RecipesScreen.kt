@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens
+package com.patrykpirog.recipebook.screens.main_menu.recipes
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*

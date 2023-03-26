@@ -17,6 +17,7 @@ import com.patrykpirog.recipebook.data.Recipe
 import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.navigation.MainScreen
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipesScreen(
@@ -25,7 +26,7 @@ fun RecipesScreen(
 ) {
         LazyColumn(
             content = {
-                item {
+                item{
                     recipes.forEach { recipe ->
                         RecipeCard(
                             recipe,
@@ -47,7 +48,7 @@ fun RecipeCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
-            .padding(16.dp, 4.dp),
+            .padding(4.dp, 4.dp),
         onClick = {
             AppModule.recipe = recipe
             mainNavController.navigate(MainScreen.RecipeScreen.route)

@@ -26,7 +26,7 @@ fun RecipeScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MediumTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(text = recipe.name)
                 },

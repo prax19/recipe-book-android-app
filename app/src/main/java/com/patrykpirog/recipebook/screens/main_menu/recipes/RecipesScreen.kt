@@ -1,6 +1,7 @@
 package com.patrykpirog.recipebook.screens.main_menu.recipes
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.firestore.ktx.firestore
@@ -16,18 +18,19 @@ import com.google.firebase.ktx.Firebase
 import com.patrykpirog.recipebook.data.Recipe
 import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.navigation.MainScreen
+import com.patrykpirog.recipebook.screens.main_menu.MainMenuViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipesScreen(
-    mainNavController: NavHostController,
-    recipes: MutableList<Recipe>
+    mainViewModel: MainMenuViewModel = viewModel(),
+    mainNavController: NavHostController
 ) {
         LazyColumn(
             content = {
                 item{
-                    recipes.forEach { recipe ->
+                    mainViewModel.recipes.forEach { recipe ->
                         RecipeCard(
                             recipe,
                             mainNavController
@@ -70,28 +73,6 @@ fun RecipeCard(
         }
     }
 }
-
-fun loadRecipes(): MutableList<Recipe> {
-    val recipes = mutableStateListOf<Recipe>()
-    val db = Firebase.firestore
-    val recipesRef = db.collection("users").document(AppModule.providesFirebaseAuth().uid.toString())
-        .collection("recipes")
-    recipesRef.get().addOnSuccessListener { snapshot ->
-        for ( recipe in snapshot.documents ) {
-            recipes.add(
-                Recipe(
-                    recipe.id,
-                    recipe.get("name").toString(),
-                    recipe.get("description")?.toString(),
-                    recipe.get("ingredients")?.toString(),
-                    recipe.get("steps")?.toString()
-                )
-            )
-        }
-    }
-    return recipes
-}
-
 @Composable
 @Preview(showBackground = true)
 fun RecipeCardPreview() {

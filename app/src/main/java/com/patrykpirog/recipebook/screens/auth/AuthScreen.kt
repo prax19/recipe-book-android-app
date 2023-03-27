@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.patrykpirog.recipebook.auth.AuthViewModel
 import com.patrykpirog.recipebook.navigation.MainScreen
+import com.patrykpirog.recipebook.screens.main_menu.MainMenuViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

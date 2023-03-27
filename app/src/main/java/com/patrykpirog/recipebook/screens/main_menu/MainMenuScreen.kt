@@ -27,17 +27,16 @@ import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.navigation.BottomBarScreen
 import com.patrykpirog.recipebook.navigation.BottomNavGraph
 import com.patrykpirog.recipebook.navigation.MainScreen
-import com.patrykpirog.recipebook.screens.main_menu.recipes.loadRecipes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenuScreen(
+    mainViewModel: MainMenuViewModel = viewModel(),
     navController: NavHostController
 ){
     val bottomController = rememberNavController()
-
-    val recipes = remember { loadRecipes() }
+    mainViewModel.recipes = remember{ mainViewModel.loadRecipes() }
 
 //    val scrollBehavior =
 //        enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -64,8 +63,7 @@ fun MainMenuScreen(
             ) {
                 BottomNavGraph(
                     navController = bottomController,
-                    mainNavController = navController,
-                    recipes
+                    mainNavController = navController
                 )
             }
         },

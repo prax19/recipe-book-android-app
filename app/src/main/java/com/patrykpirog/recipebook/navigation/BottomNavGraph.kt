@@ -11,8 +11,7 @@ import com.patrykpirog.recipebook.screens.main_menu.recipes.RecipesScreen
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    mainNavController: NavHostController,
-    recipes: MutableList<Recipe>
+    mainNavController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -20,8 +19,7 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomBarScreen.Recipes.route) {
             RecipesScreen(
-                mainNavController,
-                recipes
+                mainNavController = mainNavController
             )
         }
         composable(route = BottomBarScreen.Favorites.route) {

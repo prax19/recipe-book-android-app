@@ -18,10 +18,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.patrykpirog.recipebook.di.AppModule
+import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
+import com.patrykpirog.recipebook.feature_recipes.presentation.add_edit_recipe.AddEditRecipeViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,9 +29,9 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun AddRecipeScreen(
+    viewModel: AddEditRecipeViewModel = viewModel(),
     navController: NavController
 ){
-    val db = Firebase.firestore
     val scope = rememberCoroutineScope()
 
     var recipeName by rememberSaveable { mutableStateOf("") }
@@ -170,15 +170,13 @@ fun AddRecipeScreen(
                             recipeNameWrong = true
                             recipeNameFocusRequester.requestFocus()
                         } else {
-                            val recipe = hashMapOf(
-                                "name" to recipeName,
-                                "description" to description,
-                                "ingredients" to ingredients,
-                                "steps" to steps
+                            val recipe: Recipe = Recipe(
+                                name = recipeName,
+                                description = description,
+                                ingredients = ingredients,
+                                steps = steps
                             )
-                            db.collection("users")
-                                .document(AppModule.providesFirebaseAuth().uid.toString()).collection("recipes")
-                                .add(recipe)
+                            viewModel.addRecipe(recipe)
                             navController.popBackStack()
                         }
                     }

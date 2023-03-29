@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
-import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.BottomBarScreen
 
 class MainMenuViewModel: ViewModel() {
@@ -34,11 +33,12 @@ class MainMenuViewModel: ViewModel() {
         }
     }
 
+    //TODO: Move this to data layer
     fun loadRecipes(): MutableList<Recipe> {
         Log.v("My testing logs", "Load DB")
         val recipes = mutableListOf<Recipe>()
         val db = Firebase.firestore
-        val recipesRef = db.collection("users").document(AppModule.providesFirebaseAuth().uid.toString())
+        val recipesRef = db.collection("users").document("TEST123") //TEST DOCUMENT NAME
             .collection("recipes")
         recipesRef.get().addOnSuccessListener { snapshot ->
             for ( recipe in snapshot.documents ) {

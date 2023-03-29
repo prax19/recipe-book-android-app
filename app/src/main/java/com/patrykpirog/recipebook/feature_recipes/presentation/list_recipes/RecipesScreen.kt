@@ -1,7 +1,6 @@
 package com.patrykpirog.recipebook.screens.main_menu.recipes
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,12 +12,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.patrykpirog.recipebook.data.Recipe
+import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 import com.patrykpirog.recipebook.di.AppModule
-import com.patrykpirog.recipebook.navigation.MainScreen
-import com.patrykpirog.recipebook.screens.main_menu.MainMenuViewModel
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
+import com.patrykpirog.recipebook.feature_recipes.presentation.MainMenuViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

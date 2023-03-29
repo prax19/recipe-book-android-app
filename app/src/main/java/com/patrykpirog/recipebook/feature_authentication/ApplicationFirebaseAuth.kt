@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook
+package com.patrykpirog.recipebook.feature_authentication
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

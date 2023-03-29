@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.auth
+package com.patrykpirog.recipebook.feature_authentication.domain.model
 
 data class AuthState(
     val isLoading: Boolean = false,

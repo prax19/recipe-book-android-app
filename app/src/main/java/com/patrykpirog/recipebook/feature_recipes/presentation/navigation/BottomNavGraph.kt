@@ -1,10 +1,9 @@
-package com.patrykpirog.recipebook.navigation
+package com.patrykpirog.recipebook.feature_recipes.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.patrykpirog.recipebook.data.Recipe
 import com.patrykpirog.recipebook.screens.main_menu.favorites.FavoritesScreen
 import com.patrykpirog.recipebook.screens.main_menu.recipes.RecipesScreen
 

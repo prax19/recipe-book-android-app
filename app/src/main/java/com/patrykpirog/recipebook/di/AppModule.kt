@@ -1,9 +1,9 @@
 package com.patrykpirog.recipebook.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.patrykpirog.recipebook.data.AuthRepository
-import com.patrykpirog.recipebook.data.AuthRepositoryImpl
-import com.patrykpirog.recipebook.data.Recipe
+import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
+import com.patrykpirog.recipebook.feature_authentication.data.AuthRepositoryImpl
+import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object AppModule {
 
     //Cursed af XD
-    var recipe: Recipe ?= null
+    var recipe: Recipe?= null
 
     @Provides
     @Singleton
@@ -23,7 +23,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth):AuthRepository {
+    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
     }
 

@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook
+package com.patrykpirog.recipebook.feature_recipes.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.patrykpirog.recipebook.navigation.MainNavGraph
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainNavGraph
 import com.patrykpirog.recipebook.ui.theme.RecipeBookTheme
 import dagger.hilt.android.AndroidEntryPoint
 

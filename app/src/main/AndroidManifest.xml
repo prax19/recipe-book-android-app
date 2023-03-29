@@ -5,7 +5,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".ApplicationFirebaseAuth"
+        android:name=".feature_authentication.ApplicationFirebaseAuth"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeBook">
         <activity
-            android:name=".MainActivity"
+            android:name=".feature_recipes.presentation.MainActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:theme="@style/Theme.RecipeBook">

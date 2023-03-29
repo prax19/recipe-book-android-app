@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens
+package com.patrykpirog.recipebook.feature_recipes.presentation.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*

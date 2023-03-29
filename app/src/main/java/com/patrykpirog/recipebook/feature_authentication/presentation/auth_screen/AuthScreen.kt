@@ -15,15 +15,14 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.patrykpirog.recipebook.auth.AuthViewModel
-import com.patrykpirog.recipebook.navigation.MainScreen
-import com.patrykpirog.recipebook.screens.main_menu.MainMenuViewModel
+import com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen.AuthScreenViewModel
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    viewModel: AuthScreenViewModel = hiltViewModel(),
     navController: NavController
 ) {
     var email by rememberSaveable { mutableStateOf("example@example.com") }

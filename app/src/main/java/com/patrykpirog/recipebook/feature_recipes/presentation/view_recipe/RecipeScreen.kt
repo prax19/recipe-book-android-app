@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.patrykpirog.recipebook.data.Recipe
+import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

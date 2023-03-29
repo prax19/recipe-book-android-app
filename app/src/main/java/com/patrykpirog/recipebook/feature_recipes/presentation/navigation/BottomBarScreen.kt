@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.navigation
+package com.patrykpirog.recipebook.feature_recipes.presentation.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite

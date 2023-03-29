@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.navigation
+package com.patrykpirog.recipebook.feature_recipes.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -9,7 +9,7 @@ import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.screens.add_recipe.AddRecipeScreen
 import com.patrykpirog.recipebook.screens.main_menu.MainMenuScreen
 import com.patrykpirog.recipebook.screens.recipe.RecipeScreen
-import com.patrykpirog.recipebook.screens.settings.SettingsScreen
+import com.patrykpirog.recipebook.feature_recipes.presentation.settings.SettingsScreen
 
 @Composable
 fun MainNavGraph(

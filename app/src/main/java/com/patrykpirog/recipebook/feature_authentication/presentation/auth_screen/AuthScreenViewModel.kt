@@ -1,9 +1,10 @@
-package com.patrykpirog.recipebook.auth
+package com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.patrykpirog.recipebook.data.AuthRepository
-import com.patrykpirog.recipebook.util.Resource
+import com.patrykpirog.recipebook.feature_authentication.domain.model.AuthState
+import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
+import com.patrykpirog.recipebook.feature_authentication.domain.model.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class AuthScreenViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
@@ -24,13 +25,13 @@ class AuthViewModel @Inject constructor(
     ) = viewModelScope.launch {
         repository.registerUser(email, password).collect{ result ->
             when(result) {
-                is Resource.Success -> {
+                is Response.Success -> {
                     _authState.send(AuthState(isSuccess = "Sign Up sccess "))
                 }
-                is Resource.Loading -> {
+                is Response.Loading -> {
                     _authState.send(AuthState(isLoading = true))
                 }
-                is Resource.Error -> {
+                is Response.Error -> {
                     _authState.send(AuthState(isError = result.message))
                 }
             }
@@ -43,13 +44,13 @@ class AuthViewModel @Inject constructor(
     ) = viewModelScope.launch {
         repository.loginUser(email, password).collect{ result ->
             when(result) {
-                is Resource.Success -> {
+                is Response.Success -> {
                     _authState.send(AuthState(isSuccess = "Sign In sccess "))
                 }
-                is Resource.Loading -> {
+                is Response.Loading -> {
                     _authState.send(AuthState(isLoading = true))
                 }
-                is Resource.Error -> {
+                is Response.Error -> {
                     _authState.send(AuthState(isError = result.message))
                 }
             }

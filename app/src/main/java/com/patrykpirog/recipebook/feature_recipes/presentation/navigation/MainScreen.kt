@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.navigation
+package com.patrykpirog.recipebook.feature_recipes.presentation.navigation
 
 sealed class MainScreen(
     val route: String,

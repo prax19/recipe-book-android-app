@@ -24,9 +24,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.patrykpirog.recipebook.navigation.BottomBarScreen
-import com.patrykpirog.recipebook.navigation.BottomNavGraph
-import com.patrykpirog.recipebook.navigation.MainScreen
+import com.patrykpirog.recipebook.feature_recipes.presentation.MainMenuViewModel
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.BottomBarScreen
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.BottomNavGraph
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,9 +1,9 @@
 package com.patrykpirog.recipebook.feature_recipes.domain.model
 
 data class Recipe(
-    val id: String? = null,
-    val name: String,
-    val description: String? = null,
-    val ingredients: String? = null,
-    val steps: String? = null
+    var id: String? = null,
+    var name: String? = null,
+    var description: String? = null,
+    var ingredients: String? = null,
+    var steps: String? = null
 )

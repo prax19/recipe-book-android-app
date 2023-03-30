@@ -28,7 +28,7 @@ fun RecipeScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = recipe.name)
+                    Text(text = recipe.name!!)
                 },
                 actions = {
                     IconButton(onClick = {

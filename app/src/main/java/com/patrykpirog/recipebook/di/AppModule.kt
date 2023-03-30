@@ -1,9 +1,16 @@
 package com.patrykpirog.recipebook.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.patrykpirog.recipebook.feature_authentication.data.AuthRepositoryImpl
+import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
+import com.patrykpirog.recipebook.feature_recipes.data.repository.RecipesRepositoryImpl
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
+import com.patrykpirog.recipebook.feature_recipes.domain.repository.RecipesRepository
+import com.patrykpirog.recipebook.feature_recipes.domain.use_case.GetRecipes
+import com.patrykpirog.recipebook.feature_recipes.domain.use_case.UseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,5 +33,22 @@ object AppModule {
     fun providesRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
     }
+
+    @Provides
+    fun provideRecipesRef() = Firebase.firestore.collection("recipes")
+
+    @Provides
+    fun provideRecipesRepository(
+        recipesRef: CollectionReference
+    ): RecipesRepository = RecipesRepositoryImpl(recipesRef)
+
+    @Provides
+    fun provideUseCases(
+        repo: RecipesRepository
+    ) = UseCases(
+        getRecipes = GetRecipes(repo),
+//        addRecipe = AddRecipe(repo),
+//        deleteRecipe = DeleteRecipe(repo)
+    )
 
 }

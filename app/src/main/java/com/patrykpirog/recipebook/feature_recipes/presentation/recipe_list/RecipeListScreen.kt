@@ -4,82 +4,45 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
-import com.patrykpirog.recipebook.di.AppModule
-import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 import com.patrykpirog.recipebook.feature_recipes.presentation.MainMenuViewModel
+import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_list.components.RecipeCard
+import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_list.components.Recipes
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipesScreen(
-    mainViewModel: MainMenuViewModel = viewModel(),
+    mainViewModel: MainMenuViewModel = hiltViewModel(),
     mainNavController: NavHostController
 ) {
-        LazyColumn(
-            content = {
-                item{
-                    mainViewModel.recipes.forEach { recipe ->
-                        RecipeCard(
-                            recipe,
-                            mainNavController
-                        )
-                    }
+    Recipes(
+        recipesContent = { recipes ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(recipes) { recipe ->
+                            RecipeCard(
+                                recipe = recipe,
+                                mainNavController = mainNavController)
+                        }
                 }
-            }
-        )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RecipeCard(
-    recipe: Recipe,
-    mainNavController: NavHostController
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(160.dp)
-            .padding(4.dp, 4.dp),
-        onClick = {
-            AppModule.recipe = recipe
-            mainNavController.navigate(MainScreen.RecipeScreen.route)
+//                    count = recipes.size,
+//                    key = { id ->
+//                        item{
+//                            RecipeCard(
+//                                recipe = recipes[id],
+//                                mainNavController = mainNavController)
+//                        }
+//                    }
+//                ) {}
+//            }
         }
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ) {
-            Text(
-                style = MaterialTheme.typography.titleMedium,
-                text = recipe.name
-            )
-            if (recipe.description != null) {
-                Text(
-                    style = MaterialTheme.typography.bodySmall,
-                    text = recipe.description
-                )
-            }
-        }
-    }
-}
-@Composable
-@Preview(showBackground = true)
-fun RecipeCardPreview() {
-    RecipeCard(recipe = Recipe(
-        "69",
-        "Example recipe text",
-    "Example recipe description." +
-                "\nIt can be" +
-                "\nmultiline!"
-        ),
-        rememberNavController()
     )
 }

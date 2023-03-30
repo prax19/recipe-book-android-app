@@ -16,7 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -33,11 +33,11 @@ import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainSc
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenuScreen(
-    mainViewModel: MainMenuViewModel = viewModel(),
+    mainViewModel: MainMenuViewModel = hiltViewModel(),
     navController: NavHostController
 ){
     val bottomController = rememberNavController()
-    mainViewModel.recipes = remember{ mainViewModel.loadRecipes() }
+//    mainViewModel.recipes = remember{ mainViewModel.recipes }
 
 //    val scrollBehavior =
 //        enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -84,7 +84,7 @@ fun MainMenuScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
-    mainViewModel: MainMenuViewModel = viewModel(),
+    mainViewModel: MainMenuViewModel = hiltViewModel(),
     navController: NavHostController,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 ) {
@@ -109,7 +109,7 @@ fun MainTopBar(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainFab(
-    mainViewModel: MainMenuViewModel = viewModel(),
+    mainViewModel: MainMenuViewModel = hiltViewModel(),
     mainNavController: NavController
 ){
     AnimatedVisibility(
@@ -150,7 +150,7 @@ fun MainBottomBar(
 
 @Composable
 fun RowScope.AddItem(
-    mainViewModel: MainMenuViewModel = viewModel(),
+    mainViewModel: MainMenuViewModel = hiltViewModel(),
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavHostController

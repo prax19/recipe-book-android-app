@@ -18,7 +18,6 @@ import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_list.compo
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecipesScreen(
-    mainViewModel: MainMenuViewModel = hiltViewModel(),
     mainNavController: NavHostController
 ) {
     Recipes(
@@ -33,16 +32,6 @@ fun RecipesScreen(
                                 mainNavController = mainNavController)
                         }
                 }
-//                    count = recipes.size,
-//                    key = { id ->
-//                        item{
-//                            RecipeCard(
-//                                recipe = recipes[id],
-//                                mainNavController = mainNavController)
-//                        }
-//                    }
-//                ) {}
-//            }
         }
     )
 }

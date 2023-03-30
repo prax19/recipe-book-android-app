@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.patrykpirog.recipebook.commons.Constants.SERVICE_USER_UUID
 import com.patrykpirog.recipebook.feature_authentication.data.AuthRepositoryImpl
 import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import com.patrykpirog.recipebook.feature_recipes.data.repository.RecipesRepositoryImpl
@@ -35,7 +36,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideRecipesRef() = Firebase.firestore.collection("recipes")
+    fun provideRecipesRef() = Firebase.firestore.collection("/users/${SERVICE_USER_UUID}/recipes")
 
     @Provides
     fun provideRecipesRepository(

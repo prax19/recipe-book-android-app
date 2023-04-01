@@ -8,6 +8,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -36,107 +40,142 @@ fun LoginScreen(
     val emailFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
 
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Scaffold{
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement
-                .Center
-
         ) {
 
-            OutlinedTextField(
+            Column(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .focusRequester(emailFocusRequester),
-                value = viewModel.email.value,
-                onValueChange = { text ->
-                    viewModel.updateEmail(text)
-                },
-                leadingIcon = {
-                    Icon(Icons.Default.Email, null)
-                },
-                label = {
-                    Text("E-mail")
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        if(viewModel.isEmailValid.value)
-                            passwordFocusRequester.requestFocus()
-                    }
-                ),
-                isError = !viewModel.isEmailValid.value && viewModel.email.value.isNotEmpty()
-
-            )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .focusRequester(passwordFocusRequester),
-                value = viewModel.password.value,
-                onValueChange = { text ->
-                    viewModel.updatePassword(text)
-                },
-                leadingIcon = {
-                    Icon(Icons.Default.Lock, null)
-                },
-                label = {
-                    Text("Password")
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-
-                    }
+                    .weight(1f)
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .focusRequester(emailFocusRequester),
+                    value = viewModel.email.value,
+                    onValueChange = { text ->
+                        viewModel.updateEmail(text)
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Default.Email, null)
+                    },
+                    trailingIcon = {
+                        if (state.value?.isLoading == true) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    },
+                    label = {
+                        Text("E-mail")
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            if(viewModel.isEmailValid.value)
+                                passwordFocusRequester.requestFocus()
+                        }
+                    ),
+                    isError = !viewModel.isEmailValid.value && viewModel.email.value.isNotEmpty()
                 )
-            )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .focusRequester(passwordFocusRequester),
+                    value = viewModel.password.value,
+                    onValueChange = { text ->
+                        viewModel.updatePassword(text)
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Default.Lock, null)
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            content = {
+                                if(passwordVisible)
+                                    Icon(Icons.Default.VisibilityOff, null)
+                                else
+                                    Icon(Icons.Default.Visibility, null)
+                            },
+                            onClick = {
+                                passwordVisible = !passwordVisible
+                            }
+                        )
+                    },
+                    label = {
+                        Text("Password")
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if(viewModel.isEmailValid.value && viewModel.password.value.isNotEmpty())
+                                scope.launch {
+                                    viewModel.loginUser()
+                                }
+                        }
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
+            Column(
                 modifier = Modifier
-                    .width(256.dp)
-                    .height(54.dp),
-                onClick = {
-                    scope.launch {
-                        viewModel.loginUser()
-                    }
-                },
-                content = {
-                    Text(text = "Log in")
-                },
-                enabled = viewModel.buttonsEnabled.value
-            )
+                    .padding(24.dp),
+            ){
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(54.dp),
+                    onClick = {
+                        scope.launch {
+                            viewModel.loginUser()
+                        }
+                    },
+                    content = {
+                        Text(text = "Log in")
+                    },
+                    enabled = viewModel.buttonsEnabled.value
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            ElevatedButton(
-                modifier = Modifier
-                    .width(256.dp)
-                    .height(54.dp),
-                onClick = {
-                    scope.launch {
-                        viewModel.registerUser()
-                    }
-                },
-                content = {
-                    Text(text = "Sign up")
-                },
-                enabled = viewModel.buttonsEnabled.value
-            )
+                ElevatedButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(54.dp),
+                    onClick = {
+                        scope.launch {
+                            viewModel.registerUser()
+                        }
+                    },
+                    content = {
+                        Text(text = "Sign up")
+                    },
+                    enabled = viewModel.buttonsEnabled.value
+                )
 
-            if (state.value?.isLoading == true) {
-                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(8.dp))
             }
+
         }
     }
 

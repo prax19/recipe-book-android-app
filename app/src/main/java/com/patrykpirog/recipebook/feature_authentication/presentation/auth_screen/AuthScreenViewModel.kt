@@ -50,7 +50,7 @@ class AuthScreenViewModel @Inject constructor(
                 android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
     }
 
-    fun checkIfEmailValid() {
+    private fun checkIfEmailValid() {
         isEmailValid.value = android.util.Patterns.EMAIL_ADDRESS.matcher(this.email.value).matches()
     }
 

@@ -2,22 +2,23 @@ package com.patrykpirog.recipebook.feature_authentication.presentation.auth_scre
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen.AuthScreenViewModel
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 import kotlinx.coroutines.launch
@@ -32,6 +33,9 @@ fun LoginScreen(
     val context = LocalContext.current
     val state = viewModel.authState.collectAsState(initial = null)
 
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
     Scaffold{
         Column(
             modifier = Modifier
@@ -42,25 +46,61 @@ fun LoginScreen(
                 .Center
 
         ) {
-            val spaceBetween = 16.dp
 
             OutlinedTextField(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .focusRequester(emailFocusRequester),
                 value = viewModel.email.value,
-                onValueChange = {
-                    viewModel.updateEmail(it)
-                }
-            )
+                onValueChange = { text ->
+                    viewModel.updateEmail(text)
+                },
+                leadingIcon = {
+                    Icon(Icons.Default.Email, null)
+                },
+                label = {
+                    Text("E-mail")
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        if(viewModel.isEmailValid.value)
+                            passwordFocusRequester.requestFocus()
+                    }
+                ),
+                isError = !viewModel.isEmailValid.value && viewModel.email.value.isNotEmpty()
 
-            Spacer(modifier = Modifier.height(spaceBetween))
+            )
 
             OutlinedTextField(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .focusRequester(passwordFocusRequester),
                 value = viewModel.password.value,
-                onValueChange = {
-                    viewModel.updatePassword(it)
-                }
+                onValueChange = { text ->
+                    viewModel.updatePassword(text)
+                },
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, null)
+                },
+                label = {
+                    Text("Password")
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+
+                    }
+                )
             )
 
-            Spacer(modifier = Modifier.height(spaceBetween))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Button(
                 modifier = Modifier
@@ -77,7 +117,7 @@ fun LoginScreen(
                 enabled = viewModel.buttonsEnabled.value
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             ElevatedButton(
                 modifier = Modifier

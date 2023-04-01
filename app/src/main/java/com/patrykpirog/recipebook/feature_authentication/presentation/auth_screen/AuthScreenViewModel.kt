@@ -1,19 +1,14 @@
 package com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firestore.admin.v1.Index.State
 import com.patrykpirog.recipebook.feature_authentication.domain.model.AuthState
 import com.patrykpirog.recipebook.feature_authentication.domain.model.Response
 import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,6 +28,7 @@ class AuthScreenViewModel @Inject constructor(
 
     var buttonsEnabled = mutableStateOf(false)
         private set
+    var isEmailValid = mutableStateOf(false)
 
     private val _authState = Channel<AuthState>()
     val authState = _authState.receiveAsFlow()
@@ -40,6 +36,7 @@ class AuthScreenViewModel @Inject constructor(
     fun updateEmail(text: String) {
         email.value = text
         changeButtonState()
+        checkIfEmailValid()
     }
 
     fun updatePassword(text: String) {
@@ -47,9 +44,14 @@ class AuthScreenViewModel @Inject constructor(
         changeButtonState()
     }
 
-    fun changeButtonState() {
-        buttonsEnabled.value = !email.value.isNullOrEmpty() &&
-                !password.value.isNullOrEmpty()
+    private fun changeButtonState() {
+        buttonsEnabled.value = email.value.isNotEmpty() &&
+                password.value.isNotEmpty() &&
+                android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+    }
+
+    fun checkIfEmailValid() {
+        isEmailValid.value = android.util.Patterns.EMAIL_ADDRESS.matcher(this.email.value).matches()
     }
 
     fun registerUser() = viewModelScope.launch {

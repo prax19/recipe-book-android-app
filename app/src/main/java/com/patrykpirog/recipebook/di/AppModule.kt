@@ -35,13 +35,17 @@ object AppModule {
     }
 
     @Provides
-    fun provideRecipesRef() = Firebase.firestore.collection("users")
+    fun provideRecipesRef(
+        firebaseAuth: FirebaseAuth
+    ) = Firebase.firestore
+        .collection("users")
+        .document("${firebaseAuth.currentUser?.uid}")
+        .collection("recipes")
 
     @Provides
     fun provideRecipesRepository(
-        recipesRef: CollectionReference,
-        firebaseAuth: FirebaseAuth
-    ): RecipesRepository = RecipesRepositoryImpl(recipesRef, firebaseAuth)
+        recipesRef: CollectionReference
+    ): RecipesRepository = RecipesRepositoryImpl(recipesRef)
 
     @Provides
     fun provideUseCases(

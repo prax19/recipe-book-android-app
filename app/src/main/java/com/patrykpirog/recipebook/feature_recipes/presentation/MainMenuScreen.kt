@@ -33,7 +33,6 @@ import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainSc
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenuScreen(
-    mainViewModel: MainMenuViewModel = hiltViewModel(),
     navController: NavHostController
 ){
     val bottomController = rememberNavController()

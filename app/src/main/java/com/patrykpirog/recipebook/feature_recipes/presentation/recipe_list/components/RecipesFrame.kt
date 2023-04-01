@@ -9,7 +9,7 @@ import com.patrykpirog.recipebook.feature_recipes.domain.repository.Recipes
 import com.patrykpirog.recipebook.feature_recipes.presentation.MainMenuViewModel
 
 @Composable
-fun Recipes(
+fun RecipesFrame(
     viewModel: MainMenuViewModel = hiltViewModel(),
     recipesContent: @Composable (recipes: Recipes) -> Unit
 ) {

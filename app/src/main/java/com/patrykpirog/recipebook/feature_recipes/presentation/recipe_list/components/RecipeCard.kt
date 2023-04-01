@@ -28,7 +28,7 @@ fun RecipeCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
-            .padding(4.dp, 4.dp),
+            .padding(0.dp, 4.dp),
         onClick = {
             AppModule.recipe = recipe
             mainNavController.navigate(MainScreen.RecipeScreen.route)

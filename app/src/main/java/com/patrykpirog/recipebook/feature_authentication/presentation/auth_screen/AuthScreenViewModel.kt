@@ -3,8 +3,8 @@ package com.patrykpirog.recipebook.feature_authentication.presentation.auth_scre
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrykpirog.recipebook.feature_authentication.domain.model.AuthState
-import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import com.patrykpirog.recipebook.feature_authentication.domain.model.Response
+import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +16,7 @@ class AuthScreenViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    val _authState = Channel<AuthState>()
+    private val _authState = Channel<AuthState>()
     val authState = _authState.receiveAsFlow()
 
     fun registerUser(

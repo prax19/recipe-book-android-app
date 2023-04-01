@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.patrykpirog.recipebook.commons.Constants.SERVICE_USER_UUID
 import com.patrykpirog.recipebook.feature_authentication.data.AuthRepositoryImpl
 import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import com.patrykpirog.recipebook.feature_recipes.data.repository.RecipesRepositoryImpl
@@ -27,21 +26,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 
     @Provides
     @Singleton
-    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
+    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
     }
 
     @Provides
-    fun provideRecipesRef() = Firebase.firestore.collection("/users/${SERVICE_USER_UUID}/recipes")
+    fun provideRecipesRef() = Firebase.firestore.collection("users")
 
     @Provides
     fun provideRecipesRepository(
-        recipesRef: CollectionReference
-    ): RecipesRepository = RecipesRepositoryImpl(recipesRef)
+        recipesRef: CollectionReference,
+        firebaseAuth: FirebaseAuth
+    ): RecipesRepository = RecipesRepositoryImpl(recipesRef, firebaseAuth)
 
     @Provides
     fun provideUseCases(

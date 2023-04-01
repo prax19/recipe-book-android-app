@@ -1,5 +1,6 @@
 package com.patrykpirog.recipebook.feature_recipes.data.repository
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.patrykpirog.recipebook.commons.Constants.RECIPE_NAME_KEY
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
@@ -12,11 +13,14 @@ import javax.inject.Singleton
 
 @Singleton
 class RecipesRepositoryImpl @Inject constructor(
-    private val recipesRef: CollectionReference
+    private val recipesRef: CollectionReference,
+    private val firebaseAuth: FirebaseAuth
 ) : RecipesRepository {
 
     override fun getRecipesFromFirestore() = callbackFlow {
-        val snapshotListener = recipesRef.orderBy(RECIPE_NAME_KEY).addSnapshotListener { snapshot, e ->
+        val snapshotListener = recipesRef.document("${firebaseAuth.currentUser?.uid}")
+            .collection("recipes")
+            .orderBy(RECIPE_NAME_KEY).addSnapshotListener { snapshot, e ->
             val recipesResponse = if (snapshot != null) {
                 val recipes = snapshot.toObjects(Recipe::class.java)
                 Response.Success(recipes)

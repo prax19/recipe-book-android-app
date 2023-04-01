@@ -1,106 +1,121 @@
 package com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen.components
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen.AuthScreenViewModel
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
     viewModel: AuthScreenViewModel = hiltViewModel(),
     navController: NavHostController
 ){
-    var email by rememberSaveable { mutableStateOf("example@example.com") }
-    var password by rememberSaveable { mutableStateOf("example") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val state = viewModel.authState.collectAsState(initial = null)
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme
-                            .primary
-                            .copy(alpha = 0.08f)
-                            .compositeOver((MaterialTheme.colorScheme.surface.copy()))
-                    )
-                )
+    Scaffold{
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement
+                .Center
+
+        ) {
+            val spaceBetween = 16.dp
+
+            OutlinedTextField(
+                value = viewModel.email.value,
+                onValueChange = {
+                    viewModel.updateEmail(it)
+                }
             )
 
-    ) {
+            Spacer(modifier = Modifier.height(spaceBetween))
 
-        Column {
-            TextField(value = email, onValueChange = {
-                email = it
-            })
-            TextField(value = password, onValueChange = {
-                password = it
-            })
-            Row(){
-                Button(onClick = {
-                    scope.launch {
-                        viewModel.loginUser(email, password)
-                    }
-                })
-                {
-                    Text(text = "Sign in")
+            OutlinedTextField(
+                value = viewModel.password.value,
+                onValueChange = {
+                    viewModel.updatePassword(it)
                 }
-                Button(onClick = {
+            )
+
+            Spacer(modifier = Modifier.height(spaceBetween))
+
+            Button(
+                modifier = Modifier
+                    .width(256.dp)
+                    .height(54.dp),
+                onClick = {
                     scope.launch {
-                        viewModel.registerUser(email, password)
+                        viewModel.loginUser()
                     }
-                })
-                {
+                },
+                content = {
+                    Text(text = "Log in")
+                },
+                enabled = viewModel.buttonsEnabled.value
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ElevatedButton(
+                modifier = Modifier
+                    .width(256.dp)
+                    .height(54.dp),
+                onClick = {
+                    scope.launch {
+                        viewModel.registerUser()
+                    }
+                },
+                content = {
                     Text(text = "Sign up")
-                }
+                },
+                enabled = viewModel.buttonsEnabled.value
+            )
+
+            if (state.value?.isLoading == true) {
+                CircularProgressIndicator()
             }
+        }
+    }
 
-            Row {
-                if (state.value?.isLoading == true) {
-                    CircularProgressIndicator()
-
-                }
-            }
-
-            LaunchedEffect(key1 = state.value?.isSuccess) {
-                scope.launch {
-                    if(state.value?.isSuccess?.isNotEmpty() == true) {
-                        val success = state.value?.isSuccess
-                        Toast.makeText(context, "$success", Toast.LENGTH_LONG).show()
-                        navController.navigate(MainScreen.MainMenu.route) {
-                            navController.popBackStack()
-                        }
-                    }
-                }
-            }
-
-            LaunchedEffect(key1 = state.value?.isError) {
-                scope.launch {
-                    if(state.value?.isError?.isNotEmpty() == true) {
-                        val error = state.value?.isError
-                        Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
-                    }
+    LaunchedEffect(key1 = state.value?.isSuccess) {
+        scope.launch {
+            if(state.value?.isSuccess?.isNotEmpty() == true) {
+                navController.navigate(MainScreen.MainMenu.route) {
+                    navController.popBackStack()
                 }
             }
         }
+    }
 
+    LaunchedEffect(key1 = state.value?.isError) {
+        scope.launch {
+            if(state.value?.isError?.isNotEmpty() == true) {
+                val error = state.value?.isError
+                Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

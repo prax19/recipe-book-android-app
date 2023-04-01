@@ -1,5 +1,6 @@
 package com.patrykpirog.recipebook.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -14,6 +15,7 @@ import com.patrykpirog.recipebook.feature_recipes.domain.use_case.UseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -23,6 +25,11 @@ object AppModule {
 
     //Cursed af XD
     var recipe: Recipe?= null
+
+    @Provides
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 
     @Provides
     @Singleton

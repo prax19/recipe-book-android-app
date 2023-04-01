@@ -1,7 +1,9 @@
 package com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.patrykpirog.recipebook.feature_authentication.domain.model.AuthState
 import com.patrykpirog.recipebook.feature_authentication.domain.model.Response
 import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
@@ -13,8 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthScreenViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    firebaseAuth: FirebaseAuth
 ) : ViewModel() {
+
+    val isLoggedIn = mutableStateOf(firebaseAuth.currentUser?.uid.isNullOrEmpty())
 
     private val _authState = Channel<AuthState>()
     val authState = _authState.receiveAsFlow()

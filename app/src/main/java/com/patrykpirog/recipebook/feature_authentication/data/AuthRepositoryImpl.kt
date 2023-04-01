@@ -2,8 +2,8 @@ package com.patrykpirog.recipebook.feature_authentication.data
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import com.patrykpirog.recipebook.feature_authentication.domain.model.Response
+import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -17,6 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             emit(Response.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+
             emit(Response.Success(result))
         }.catch {
             emit(Response.Error(it.message.toString()))
@@ -27,6 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             emit(Response.Loading())
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+
             emit(Response.Success(result))
         }.catch {
             emit(Response.Error(it.message.toString()))

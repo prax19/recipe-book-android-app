@@ -10,6 +10,7 @@ import com.patrykpirog.recipebook.feature_authentication.domain.repository.AuthR
 import com.patrykpirog.recipebook.feature_recipes.data.repository.RecipesRepositoryImpl
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 import com.patrykpirog.recipebook.feature_recipes.domain.repository.RecipesRepository
+import com.patrykpirog.recipebook.feature_recipes.domain.use_case.AddRecipe
 import com.patrykpirog.recipebook.feature_recipes.domain.use_case.GetRecipes
 import com.patrykpirog.recipebook.feature_recipes.domain.use_case.UseCases
 import dagger.Module
@@ -59,7 +60,7 @@ object AppModule {
         repo: RecipesRepository
     ) = UseCases(
         getRecipes = GetRecipes(repo),
-//        addRecipe = AddRecipe(repo),
+        addRecipe = AddRecipe(repo),
 //        deleteRecipe = DeleteRecipe(repo)
     )
 

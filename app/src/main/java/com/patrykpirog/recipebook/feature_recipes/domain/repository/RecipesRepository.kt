@@ -13,8 +13,8 @@ interface RecipesRepository {
 
     fun getRecipesFromFirestore(): Flow<RecipeResponse>
 
-//    suspend fun addRecipeToFirestore(recipe: Recipe): AddRecipeResponse
-//
+    suspend fun addRecipeToFirestore(recipe: Recipe): AddRecipeResponse
+
 //    suspend fun deleteRecipeFromFirestore(recipeId: String): DeleteRecipeResponse
 
 }

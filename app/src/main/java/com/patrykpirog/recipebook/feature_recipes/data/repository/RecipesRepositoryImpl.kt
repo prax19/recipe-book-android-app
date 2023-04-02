@@ -4,9 +4,11 @@ import com.google.firebase.firestore.CollectionReference
 import com.patrykpirog.recipebook.commons.Constants.RECIPE_NAME_KEY
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Response
+import com.patrykpirog.recipebook.feature_recipes.domain.repository.AddRecipeResponse
 import com.patrykpirog.recipebook.feature_recipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,9 +33,14 @@ class RecipesRepositoryImpl @Inject constructor(
         }
     }
 
-//    override suspend fun addRecipeToFirestore(recipe: Recipe): Flow<Response<Void?>> {
-//        TODO("Not yet implemented")
-//    }
+    override suspend fun addRecipeToFirestore(recipe: Recipe): AddRecipeResponse {
+        return try {
+            recipesRef.document().set(recipe).await()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
 //
 //    override suspend fun deleteRecipeFromFirestore(recipeId: String): Flow<Response<Void?>> {
 //        TODO("Not yet implemented")

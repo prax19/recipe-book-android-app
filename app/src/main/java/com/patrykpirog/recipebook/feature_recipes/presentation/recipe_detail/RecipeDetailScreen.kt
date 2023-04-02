@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens.recipe
+package com.patrykpirog.recipebook.feature_recipes.presentation.recipe_detail
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -93,6 +93,6 @@ fun RecipeText(
     Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
     )
 }

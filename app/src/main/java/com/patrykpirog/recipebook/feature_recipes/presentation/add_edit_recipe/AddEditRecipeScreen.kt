@@ -1,4 +1,4 @@
-package com.patrykpirog.recipebook.screens.add_recipe
+package com.patrykpirog.recipebook.feature_recipes.presentation.add_edit_recipe
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -18,10 +18,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
-import com.patrykpirog.recipebook.feature_recipes.presentation.add_edit_recipe.AddEditRecipeViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,7 +28,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun AddRecipeScreen(
-    viewModel: AddEditRecipeViewModel = viewModel(),
+    viewModel: AddEditRecipeViewModel = hiltViewModel(),
     navController: NavController
 ){
     val scope = rememberCoroutineScope()
@@ -170,7 +169,7 @@ fun AddRecipeScreen(
                             recipeNameWrong = true
                             recipeNameFocusRequester.requestFocus()
                         } else {
-                            val recipe: Recipe = Recipe(
+                            val recipe = Recipe(
                                 name = recipeName,
                                 description = description,
                                 ingredients = ingredients,

@@ -40,7 +40,7 @@ fun MainNavGraph(
         composable(route = MainScreen.RecipeScreen.route) {
             RecipeScreen(
                 navController = navController,
-                AppModule.recipe!!
+                recipe = AppModule.recipe!!
             )
         }
 

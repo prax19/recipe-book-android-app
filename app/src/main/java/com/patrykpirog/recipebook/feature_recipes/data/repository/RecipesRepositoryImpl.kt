@@ -5,6 +5,7 @@ import com.patrykpirog.recipebook.commons.Constants.RECIPE_NAME_KEY
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Response
 import com.patrykpirog.recipebook.feature_recipes.domain.repository.AddRecipeResponse
+import com.patrykpirog.recipebook.feature_recipes.domain.repository.DeleteRecipeResponse
 import com.patrykpirog.recipebook.feature_recipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -21,7 +22,12 @@ class RecipesRepositoryImpl @Inject constructor(
         val snapshotListener = recipesRef
             .orderBy(RECIPE_NAME_KEY).addSnapshotListener { snapshot, e ->
             val recipesResponse = if (snapshot != null) {
-                val recipes = snapshot.toObjects(Recipe::class.java)
+                val recipes = mutableListOf<Recipe>()
+                for(document in snapshot.documents) {
+                    val recipe = document.toObject(Recipe::class.java)
+                    recipe!!.id = document.id
+                    recipes.add(recipe)
+                }
                 Response.Success(recipes)
             } else {
                 Response.Failure(e)
@@ -41,8 +47,13 @@ class RecipesRepositoryImpl @Inject constructor(
             Response.Failure(e)
         }
     }
-//
-//    override suspend fun deleteRecipeFromFirestore(recipeId: String): Flow<Response<Void?>> {
-//        TODO("Not yet implemented")
-//    }
+
+    override suspend fun deleteRecipeFromFirestore(recipe: Recipe): DeleteRecipeResponse{
+        return try {
+            recipesRef.document(recipe.id!!).delete().await()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
 }

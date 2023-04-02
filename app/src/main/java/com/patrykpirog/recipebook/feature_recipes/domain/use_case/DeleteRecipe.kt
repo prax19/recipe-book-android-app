@@ -1,9 +1,12 @@
 package com.patrykpirog.recipebook.feature_recipes.domain.use_case
 
-//class DeleteRecipe(
-//    private val repository: RecipeRepository
-//) {
-//    suspend operator fun invoke(
-//        recipeId: String
-//    ) = repository.deleteRecipeFromFirestore(recipeId)
-//}
+import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
+import com.patrykpirog.recipebook.feature_recipes.domain.repository.RecipesRepository
+
+class DeleteRecipe(
+    private val repository: RecipesRepository
+) {
+    suspend operator fun invoke(
+        recipe: Recipe
+    ) = repository.deleteRecipeFromFirestore(recipe)
+}

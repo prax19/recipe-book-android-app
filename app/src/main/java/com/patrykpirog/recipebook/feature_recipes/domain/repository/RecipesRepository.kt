@@ -15,6 +15,6 @@ interface RecipesRepository {
 
     suspend fun addRecipeToFirestore(recipe: Recipe): AddRecipeResponse
 
-//    suspend fun deleteRecipeFromFirestore(recipeId: String): DeleteRecipeResponse
+    suspend fun deleteRecipeFromFirestore(recipe: Recipe): DeleteRecipeResponse
 
 }

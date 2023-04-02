@@ -14,15 +14,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.patrykpirog.recipebook.di.AppModule
-import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
+import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_detail.components.DeleteRecipeDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(
     viewModel: RecipeDetailViewModel = hiltViewModel(),
-    navController: NavController? = null,
-    recipe: Recipe
+    navController: NavController? = null
 ){
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -31,12 +29,11 @@ fun RecipeScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = recipe.name!!)
+                    Text(text = viewModel.currentRecipe?.name.toString())
                 },
                 actions = {
                     IconButton(onClick = {
-                        viewModel.deleteRecipe(AppModule.recipe!!)
-                        navController?.popBackStack()
+                        viewModel.showDeleteDialog()
                     }) {
                         Icon(Icons.Default.Delete, "Delete recipe")
                     }
@@ -63,26 +60,40 @@ fun RecipeScreen(
                 contentPadding = PaddingValues(16.dp)
             ) {
                 item {
-                    if(!recipe.description.isNullOrEmpty())
+                    if(!viewModel.currentRecipe?.description.isNullOrEmpty())
                         RecipeText(
                             headline = "Description",
-                            text = recipe.description.toString())
+                            text = viewModel.currentRecipe?.description.toString())
                 }
                 item {
-                    if(!recipe.ingredients.isNullOrEmpty())
+                    if(!viewModel.currentRecipe?.ingredients.isNullOrEmpty())
                         RecipeText(
                             headline = "Ingradients",
-                            text = recipe.ingredients .toString())
+                            text = viewModel.currentRecipe?.ingredients.toString())
                 }
                 item {
-                    if(!recipe.steps.isNullOrEmpty())
+                    if(!viewModel.currentRecipe?.steps.isNullOrEmpty())
                         RecipeText(
                             headline = "Steps",
-                            text = recipe.steps.toString())
+                            text = viewModel.currentRecipe?.steps.toString())
                 }
             }
         }
     )
+
+    if(viewModel.isDeleteRecipeDialogShown) {
+        DeleteRecipeDialog(
+            onApprove = {
+                viewModel.hideDeleteDialog()
+                viewModel.deleteRecipe()
+                navController?.popBackStack()
+            },
+            onDismiss = {
+                viewModel.hideDeleteDialog()
+            }
+        )
+    }
+
 }
 
 @Composable

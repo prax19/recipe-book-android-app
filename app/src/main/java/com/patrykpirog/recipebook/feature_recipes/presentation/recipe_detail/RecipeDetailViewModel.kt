@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.patrykpirog.recipebook.feature_recipes.domain.model.Recipe
+import com.patrykpirog.recipebook.di.AppModule
 import com.patrykpirog.recipebook.feature_recipes.domain.model.Response
 import com.patrykpirog.recipebook.feature_recipes.domain.repository.DeleteRecipeResponse
 import com.patrykpirog.recipebook.feature_recipes.domain.use_case.UseCases
@@ -21,9 +21,23 @@ class RecipeDetailViewModel @Inject constructor(
     var deleteRecipeResponse by mutableStateOf<DeleteRecipeResponse>(Response.Success(false))
         private set
 
-    fun deleteRecipe(recipe: Recipe) = viewModelScope.launch {
+    var currentRecipe by mutableStateOf(AppModule.recipe)
+        private set
+
+    var isDeleteRecipeDialogShown by mutableStateOf(false)
+        private set
+
+    fun deleteRecipe() = viewModelScope.launch {
         deleteRecipeResponse = Response.Loading
-        deleteRecipeResponse = useCases.deleteRecipe(recipe)
+        deleteRecipeResponse = useCases.deleteRecipe(currentRecipe!!)
+    }
+
+    fun showDeleteDialog() {
+        isDeleteRecipeDialogShown = true
+    }
+
+    fun hideDeleteDialog() {
+        isDeleteRecipeDialogShown = false
     }
 
 }

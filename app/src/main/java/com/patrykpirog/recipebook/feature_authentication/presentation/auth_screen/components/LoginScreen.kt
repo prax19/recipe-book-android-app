@@ -141,7 +141,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding(24.dp),
             ){
-                Button(
+                OutlinedButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(54.dp),
@@ -158,7 +158,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                ElevatedButton(
+                TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(54.dp),

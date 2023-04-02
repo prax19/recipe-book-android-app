@@ -4,15 +4,16 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainNavGraph
 import com.patrykpirog.recipebook.ui.theme.RecipeBookTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +27,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            window.statusBarColor = Color.Transparent.toArgb()
-            window.navigationBarColor = Color.Transparent.toArgb()
-            window.isNavigationBarContrastEnforced = false
+
+            val uiController = rememberSystemUiController()
+
+            uiController.setStatusBarColor(
+                color = Color.Transparent,
+                darkIcons = !isSystemInDarkTheme()
+            )
+            uiController.setNavigationBarColor(
+                color = Color.Transparent,
+                darkIcons = !isSystemInDarkTheme()
+            )
+            uiController.isNavigationBarContrastEnforced = false
             WindowCompat.setDecorFitsSystemWindows(window, false)
 
             RecipeBookTheme {

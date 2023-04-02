@@ -1,9 +1,6 @@
 package com.patrykpirog.recipebook.feature_recipes.presentation.recipe_list.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -27,20 +24,20 @@ fun RecipeCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
-            .padding(0.dp, 4.dp),
+            .height(156.dp),
         onClick = {
             AppModule.recipe = recipe
             mainNavController.navigate(MainScreen.RecipeScreen.route)
         }
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(24.dp)
         ) {
             Text(
                 style = MaterialTheme.typography.titleMedium,
                 text = recipe.name!!
             )
+            Spacer(modifier = Modifier.height(16.dp))
             if (recipe.description != null) {
                 Text(
                     style = MaterialTheme.typography.bodySmall,
@@ -49,6 +46,7 @@ fun RecipeCard(
             }
         }
     }
+    Spacer(modifier = Modifier.height(16.dp))
 }
 @Composable
 @Preview(showBackground = true)

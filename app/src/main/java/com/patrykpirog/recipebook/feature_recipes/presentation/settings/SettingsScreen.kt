@@ -12,15 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.BuildConfig
+import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun SettingsScreen(
-    navController: NavController
+    navController: NavHostController,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -54,6 +58,22 @@ fun SettingsScreen(
                     SettingsInfoElement(
                         "Version",
                         BuildConfig.BUILD_TYPE + " " + BuildConfig.VERSION_NAME
+                    )
+                    OutlinedButton(
+                        modifier = Modifier
+                            .width(128.dp),
+                        content = {
+                            Text("Sign out")
+                        },
+                        onClick = {
+                            viewModel.signOut()
+                            navController.navigate(MainScreen.LoginScreen.route) {
+                                popUpTo(navController.graph.id){
+                                    inclusive = true
+                                }
+                                //navController.popBackStack()
+                            }
+                        }
                     )
                 }
             }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">E-mail</string>
+    <string name="password">Hasło</string>
+    <string name="log_in">Zaloguj się</string>
+    <string name="sign_up">Zarejestruj się</string>
+    <string name="new_recipe">Nowy przepis</string>
+    <string name="add">Dodaj</string>
+    <string name="recipe_name">Nazwa przepisu</string>
+    <string name="description">Opis</string>
+    <string name="optional">opcjonalne</string>
+    <string name="ingredients">Składniki</string>
+    <string name="steps">Kroki</string>
+    <string name="delete">Usuń</string>
+    <string name="cancel">Anuluj</string>
+    <string name="delete_recipe_dialog_title">Usunąć przepis?</string>
+    <string name="delete_recipe_dialog_text">Czy na pewno chcesz usunąć przepis %1$s? Tej operacji nie można cofnąć.</string>
+    <string name="recipes">Przepisy</string>
+    <string name="favorites">Ulubione</string>
+    <string name="settings">Ustawienia</string>
+    <string name="sign_out">Wyloguj</string>
+    <string name="version">Wersja</string>
+</resources>

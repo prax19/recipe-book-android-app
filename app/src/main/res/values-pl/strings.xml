@@ -14,7 +14,7 @@
     <string name="delete">Usuń</string>
     <string name="cancel">Anuluj</string>
     <string name="delete_recipe_dialog_title">Usunąć przepis?</string>
-    <string name="delete_recipe_dialog_text">Czy na pewno chcesz usunąć przepis %1$s? Tej operacji nie można cofnąć.</string>
+    <string name="delete_recipe_dialog_text">Czy na pewno chcesz usunąć przepis %1$s? Tej operacji nie można będzie cofnąć.</string>
     <string name="recipes">Przepisy</string>
     <string name="favorites">Ulubione</string>
     <string name="settings">Ustawienia</string>

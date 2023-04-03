@@ -57,19 +57,19 @@ fun DeleteRecipeDialog(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     TextButton(
-                        onClick = onApprove,
-                        content = {
-                            Text(stringResource(id = R.string.delete))
-                        },
-                        colors = ButtonDefaults.textButtonColors( contentColor = MaterialTheme.colorScheme.error)
-                    )
-                    TextButton(
                         onClick = {
                             viewModel.hideDeleteDialog()
                         },
                         content = {
                             Text(stringResource(id = R.string.cancel))
                         }
+                    )
+                    TextButton(
+                        onClick = onApprove,
+                        content = {
+                            Text(stringResource(id = R.string.delete))
+                        },
+                        colors = ButtonDefaults.textButtonColors( contentColor = MaterialTheme.colorScheme.error)
                     )
                 }
             }

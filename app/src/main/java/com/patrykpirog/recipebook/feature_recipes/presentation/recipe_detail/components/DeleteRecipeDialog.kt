@@ -8,8 +8,10 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.patrykpirog.recipebook.R
 import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_detail.RecipeDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,13 +41,12 @@ fun DeleteRecipeDialog(
                         )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Delete recipe?",
+                        text = stringResource(id = R.string.delete_recipe_dialog_title),
                         style = typography.headlineSmall
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Are you sure you want to delete ${viewModel.currentRecipe?.name} recipe? " +
-                                "This operation cannot be reversed. ",
+                        text = stringResource(id = R.string.delete_recipe_dialog_text, viewModel.currentRecipe?.name.toString()),
                         style = typography.bodyMedium
                     )
                 }
@@ -58,7 +59,7 @@ fun DeleteRecipeDialog(
                     TextButton(
                         onClick = onApprove,
                         content = {
-                            Text("Delete")
+                            Text(stringResource(id = R.string.delete))
                         },
                         colors = ButtonDefaults.textButtonColors( contentColor = MaterialTheme.colorScheme.error)
                     )
@@ -67,7 +68,7 @@ fun DeleteRecipeDialog(
                             viewModel.hideDeleteDialog()
                         },
                         content = {
-                            Text("Cancel")
+                            Text(stringResource(id = R.string.cancel))
                         }
                     )
                 }

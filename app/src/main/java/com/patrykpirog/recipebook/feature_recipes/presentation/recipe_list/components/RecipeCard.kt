@@ -1,10 +1,7 @@
 package com.patrykpirog.recipebook.feature_recipes.presentation.recipe_list.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +18,7 @@ fun RecipeCard(
     recipe: Recipe,
     mainNavController: NavHostController
 ) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(156.dp),

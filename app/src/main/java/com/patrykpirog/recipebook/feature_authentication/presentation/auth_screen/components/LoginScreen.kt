@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.patrykpirog.recipebook.R
 import com.patrykpirog.recipebook.feature_authentication.presentation.auth_screen.AuthScreenViewModel
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 import kotlinx.coroutines.launch
@@ -76,7 +78,7 @@ fun LoginScreen(
                         }
                     },
                     label = {
-                        Text("E-mail")
+                        Text(stringResource(id = R.string.email))
                     },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -117,7 +119,7 @@ fun LoginScreen(
                         )
                     },
                     label = {
-                        Text("Password")
+                        Text(stringResource(id = R.string.password))
                     },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -151,7 +153,7 @@ fun LoginScreen(
                         }
                     },
                     content = {
-                        Text(text = "Log in")
+                        Text(stringResource(id = R.string.log_in))
                     },
                     enabled = viewModel.buttonsEnabled.value
                 )
@@ -168,7 +170,7 @@ fun LoginScreen(
                         }
                     },
                     content = {
-                        Text(text = "Sign up")
+                        Text(stringResource(id = R.string.sign_up))
                     },
                     enabled = viewModel.buttonsEnabled.value
                 )

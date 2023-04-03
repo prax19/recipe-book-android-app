@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.patrykpirog.recipebook.BuildConfig
+import com.patrykpirog.recipebook.R
 import com.patrykpirog.recipebook.feature_recipes.presentation.navigation.MainScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -30,13 +32,13 @@ fun SettingsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Settings")
+                    Text(stringResource(id = R.string.settings))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
                     }) {
-                        Icon(Icons.Default.ArrowBack, "Back")
+                        Icon(Icons.Default.ArrowBack, null)
                     }
                 },
             )
@@ -56,14 +58,14 @@ fun SettingsScreen(
                     modifier = Modifier.verticalScroll(rememberScrollState())
                 ){
                     SettingsInfoElement(
-                        "Version",
+                        stringResource(id = R.string.version),
                         BuildConfig.BUILD_TYPE + " " + BuildConfig.VERSION_NAME
                     )
                     OutlinedButton(
                         modifier = Modifier
                             .width(128.dp),
                         content = {
-                            Text("Sign out")
+                            Text(stringResource(id = R.string.sign_out))
                         },
                         onClick = {
                             viewModel.signOut()

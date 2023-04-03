@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.patrykpirog.recipebook.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.patrykpirog.recipebook.feature_recipes.presentation.recipe_detail.components.DeleteRecipeDialog
@@ -35,12 +37,12 @@ fun RecipeScreen(
                     IconButton(onClick = {
                         viewModel.showDeleteDialog()
                     }) {
-                        Icon(Icons.Default.Delete, "Delete recipe")
+                        Icon(Icons.Default.Delete, null)
                     }
                     IconButton(onClick = {
 
                     }) {
-                        Icon(Icons.Default.Edit, "Edit recipe")
+                        Icon(Icons.Default.Edit, null)
                     }
                 },
                 navigationIcon = {
@@ -48,7 +50,7 @@ fun RecipeScreen(
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
-                            Icon(Icons.Default.ArrowBack, "Back")
+                            Icon(Icons.Default.ArrowBack, null)
                         }
                 },
                 scrollBehavior = scrollBehavior
@@ -62,19 +64,19 @@ fun RecipeScreen(
                 item {
                     if(!viewModel.currentRecipe?.description.isNullOrEmpty())
                         RecipeText(
-                            headline = "Description",
+                            headline = stringResource(id = R.string.description),
                             text = viewModel.currentRecipe?.description.toString())
                 }
                 item {
                     if(!viewModel.currentRecipe?.ingredients.isNullOrEmpty())
                         RecipeText(
-                            headline = "Ingradients",
+                            headline = stringResource(id = R.string.ingredients),
                             text = viewModel.currentRecipe?.ingredients.toString())
                 }
                 item {
                     if(!viewModel.currentRecipe?.steps.isNullOrEmpty())
                         RecipeText(
-                            headline = "Steps",
+                            headline = stringResource(id = R.string.steps),
                             text = viewModel.currentRecipe?.steps.toString())
                 }
             }

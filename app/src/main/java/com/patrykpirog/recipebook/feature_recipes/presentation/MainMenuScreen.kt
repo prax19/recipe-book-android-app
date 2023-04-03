@@ -97,7 +97,7 @@ fun MainTopBar(
                     navController.navigate(MainScreen.SettingsScreen.route)
                 },
                 content = {
-                    Icon(Icons.Default.Settings, "App settings")
+                    Icon(Icons.Default.Settings, null)
                 }
             )
         },
@@ -121,7 +121,7 @@ fun MainFab(
                 mainNavController.navigate(MainScreen.AddRecipeScreen.route)
             }
         ) {
-            Icon(Icons.Default.Add, "Add")
+            Icon(Icons.Default.Add, null)
         }
     }
 }
@@ -161,7 +161,7 @@ fun RowScope.AddItem(
         icon = {
             Icon(
                 imageVector = screen.icon,
-                contentDescription = "Navigation icon"
+                contentDescription = null
             )
         },
         selected = currentDestination?.hierarchy?.any {

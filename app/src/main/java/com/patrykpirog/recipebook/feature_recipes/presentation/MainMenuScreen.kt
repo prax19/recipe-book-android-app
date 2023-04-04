@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -89,7 +90,7 @@ fun MainTopBar(
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(mainViewModel.mainTopAppBarText)
+            Text(stringResource(mainViewModel.mainTopAppBarTextResourceId))
         },
         actions = {
             IconButton(
@@ -156,7 +157,7 @@ fun RowScope.AddItem(
 ) {
     NavigationBarItem(
         label = {
-            Text(text = screen.title)
+            Text(text = stringResource(screen.titleResId))
         },
         icon = {
             Icon(

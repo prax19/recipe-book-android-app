@@ -26,7 +26,7 @@ class MainMenuViewModel @Inject constructor(
     var recipesResponse by mutableStateOf<RecipeResponse>(Response.Loading)
         private set
 
-    var mainTopAppBarText: String by mutableStateOf(BottomBarScreen.Recipes.title)
+    var mainTopAppBarTextResourceId by mutableStateOf(BottomBarScreen.Recipes.titleResId)
         private set
 
     var mainFabVisibility: Boolean by mutableStateOf(true)
@@ -45,11 +45,11 @@ class MainMenuViewModel @Inject constructor(
     fun changeBottomScreen(route: String) {
         when(route) {
             BottomBarScreen.Recipes.route -> {
-                mainTopAppBarText = BottomBarScreen.Recipes.title
+                mainTopAppBarTextResourceId = BottomBarScreen.Recipes.titleResId
                 mainFabVisibility = true
             }
             BottomBarScreen.Favorites.route -> {
-                mainTopAppBarText = BottomBarScreen.Favorites.title
+                mainTopAppBarTextResourceId = BottomBarScreen.Favorites.titleResId
                 mainFabVisibility = false
             }
         }

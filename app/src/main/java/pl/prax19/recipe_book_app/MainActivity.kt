@@ -1,7 +1,9 @@
 package pl.prax19.recipe_book_app
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +18,11 @@ import pl.prax19.recipe_book_app.ui.theme.RecipeBookTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.TRANSPARENT, Color.TRANSPARENT
+            )
+        )
         setContent {
             RecipeBookTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

@@ -11,10 +11,12 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import pl.prax19.recipe_book_app.presentation.MainView
 import pl.prax19.recipe_book_app.ui.theme.RecipeBookTheme
 import pl.prax19.recipe_book_app.utils.Screen
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

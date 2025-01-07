@@ -47,7 +47,7 @@ fun MainView() {
                     items(items = state.recipes) { recipe ->
                         // TODO: add recipe object representation
                         Text(
-                            text = recipe,
+                            text = recipe.name,
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }

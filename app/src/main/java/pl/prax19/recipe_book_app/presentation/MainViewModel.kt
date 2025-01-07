@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import pl.prax19.recipe_book_app.data.database.RecipeRepository
+import pl.prax19.recipe_book_app.data.model.Recipe
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val recipeRepository: RecipeRepository
+    recipeRepository: RecipeRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(ViewState())
@@ -26,7 +26,6 @@ class MainViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ViewState())
 
     data class ViewState(
-        // TODO: add recipe class
-        val recipes: List<String> = emptyList()
+        val recipes: List<Recipe> = emptyList()
     )
 }

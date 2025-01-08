@@ -13,11 +13,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    recipeRepository: RecipeRepository
+    private val recipeRepository: RecipeRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(ViewState())
     private val _recipes = recipeRepository.getAllRecipes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val state = combine(_state, _recipes) { state, recipes ->
         state.copy(

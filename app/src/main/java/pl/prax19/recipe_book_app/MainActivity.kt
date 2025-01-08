@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pl.prax19.recipe_book_app.presentation.MainView
+import pl.prax19.recipe_book_app.presentation.RecipeWizardView
 import pl.prax19.recipe_book_app.ui.theme.RecipeBookTheme
 import pl.prax19.recipe_book_app.utils.Screen
 
@@ -36,7 +37,18 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.MainView.route
                     ) {
                         composable(route = Screen.MainView.route) {
-                            MainView()
+                            MainView(
+                                onAddRecipe = {
+                                    navController.navigate(Screen.RecipeWizardView.route)
+                                }
+                            )
+                        }
+                        composable(route = Screen.RecipeWizardView.route) {
+                            RecipeWizardView(
+                                onExit = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                     }
                 }

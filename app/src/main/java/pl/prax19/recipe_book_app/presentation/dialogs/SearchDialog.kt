@@ -34,17 +34,15 @@ import pl.prax19.recipe_book_app.data.model.Ingredient
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun IngredientSearchDialog(
-    onDismissRequest: () -> Unit,
-    onAccept: (List<Ingredient>) -> Unit,
-    onSearch: (query: String) -> List<Ingredient>,
-    onNewIngredient: (ingredient: Ingredient) -> Unit,
+    selected: List<Ingredient>,
+    onClose: () -> Unit,
+    onAdd: (String) -> Unit,
+    onSearch: (query: String) -> List<String>,
     isShown: Boolean
 ) {
     // TODO: improve UI
     val query = remember { mutableStateOf("") }
     val showResults = remember { mutableStateOf(false) }
-
-    val selected = remember { mutableStateOf(emptyList<Ingredient>()) }
 
     when (isShown) {
         true -> {
@@ -53,7 +51,7 @@ fun IngredientSearchDialog(
                     decorFitsSystemWindows = false,
                     usePlatformDefaultWidth = false
                 ),
-                onDismissRequest = { onDismissRequest() },
+                onDismissRequest = { onClose() },
                 content = {
                     Scaffold(
                         topBar = {
@@ -110,20 +108,16 @@ fun IngredientSearchDialog(
                                         ) { item ->
                                             DropdownMenuItem(
                                                 text = {
-                                                    Text(item.name)
+                                                    Text(item)
                                                },
                                                 onClick = {
-                                                    // TODO: add support for units
-                                                    val newIngredient = Ingredient(name = item.name)
-                                                    // Include line below to filter out multiplied ingredients
-                                                    // if(selected.value.none {it.name == item.name})
-                                                        selected.value += newIngredient
-                                                    onNewIngredient(newIngredient)
+                                                    // TODO: add ingredient quantity support
+                                                    onAdd(item)
                                                     showResults.value = false
                                                     query.value = ""
                                                 },
                                                 leadingIcon = {
-                                                    if(selected.value.any { it.name == item.name })
+                                                    if(selected.any { it.name == item })
                                                         Icon(
                                                             Icons.Filled.Check,
                                                             "Ingredient added"
@@ -148,7 +142,7 @@ fun IngredientSearchDialog(
                                 contentPadding = it,
                                 content = {
                                     items(
-                                        items = selected.value
+                                        items = selected
                                     ) { ingredient ->
                                         Text(
                                             modifier = Modifier.padding(16.dp),
@@ -156,12 +150,13 @@ fun IngredientSearchDialog(
                                         )
                                     }
                                     item {
+                                        // TODO: remove this ugly button
                                         TextButton(
                                             modifier = Modifier
                                                 .padding(16.dp)
                                                 .fillMaxWidth(),
                                             onClick = {
-                                                onAccept(selected.value)
+                                                onClose()
                                             },
                                             content = {
                                                 Text("Accept")

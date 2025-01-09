@@ -21,13 +21,12 @@ class RecipeWizardViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _state = MutableStateFlow(ViewState())
-    private val _availableIngredients = recipeRepository.getAllIngredients()
-    val state = combine(_state, _availableIngredients) { state, availableIngredients ->
+    private val _existingIngredients = recipeRepository.getAllIngredients()
+    val state = combine(_state, _existingIngredients) { state, availableIngredients ->
         state.copy(
             availableIngredients = availableIngredients
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ViewState())
-
 
     fun saveRecipe() {
         viewModelScope.launch {
@@ -42,16 +41,34 @@ class RecipeWizardViewModel @Inject constructor(
         }
     }
 
-    fun getIngredientSearchQueryResponse(query: String): List<Ingredient> {
+    fun getIngredientSearchQueryResponse(query: String): List<String> {
+        // TODO: optimize
         var matchingIngredients = state.value.availableIngredients.filter {
             it.name.contains(query)
         }
         if(state.value.availableIngredients.none { it.name == query })
             matchingIngredients = listOf(Ingredient(name = query)) + matchingIngredients
-        return matchingIngredients.filterNot { it.name in listOf("") }
+        return matchingIngredients.filterNot { it.name in listOf("") }.map { it.name }
     }
 
-    fun addIngredient(ingredient: Ingredient) {
+    fun findIngredientByName(name: String): Ingredient? {
+        return state.value.availableIngredients.find { it.name == name }
+    }
+
+    fun addIngredient(name: String) {
+        // TODO: add quantity support
+        viewModelScope.launch {
+            findIngredientByName(name)?.let { ingredient ->
+                _state.update { it.copy(ingredients = it.ingredients + ingredient) }
+            } ?: run {
+                val newIngredient = Ingredient(name = name)
+                createIngredient(newIngredient)
+                _state.update { it.copy(ingredients = it.ingredients + newIngredient) }
+            }
+        }
+    }
+
+    fun createIngredient(ingredient: Ingredient) {
         viewModelScope.launch {
             if (state.value.availableIngredients.none { it.name == ingredient.name })
                 recipeRepository.addIngredient(ingredient)
@@ -68,10 +85,6 @@ class RecipeWizardViewModel @Inject constructor(
 
     fun updateSource(source: String) {
         _state.update { it.copy(source = source) }
-    }
-
-    fun updateIngredients(ingredients: List<Ingredient>) {
-        _state.update { it.copy(ingredients = ingredients) }
     }
 
     data class ViewState(

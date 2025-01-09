@@ -52,18 +52,16 @@ fun RecipeWizardView(
     val showStepsSearchDialog = remember { mutableStateOf(false) }
 
     IngredientSearchDialog(
-        onDismissRequest = {
+        selected = state.ingredients,
+        onClose = {
             showIngredientSearchDialog.value = false
-       },
-        onAccept = {
-            viewModel.updateIngredients(it)
-            showIngredientSearchDialog.value = false
+        },
+        onAdd = { ingredient ->
+            // TODO: add ingredient quantity support
+            viewModel.addIngredient(ingredient)
         },
         onSearch = { query ->
             viewModel.getIngredientSearchQueryResponse(query)
-        },
-        onNewIngredient = { newIngredient ->
-            viewModel.addIngredient(newIngredient)
         },
         isShown = showIngredientSearchDialog.value
     )

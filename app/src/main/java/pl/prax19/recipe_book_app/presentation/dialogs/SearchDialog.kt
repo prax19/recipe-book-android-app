@@ -28,20 +28,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import pl.prax19.recipe_book_app.data.model.Ingredient
+import pl.prax19.recipe_book_app.data.model.RecipeIngredient
+import pl.prax19.recipe_book_app.utils.IngredientQuery
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun IngredientSearchDialog(
-    selected: List<Ingredient>,
+    selected: List<RecipeIngredient>,
     onClose: () -> Unit,
-    onAdd: (String) -> Unit,
-    onSearch: (query: String) -> List<String>,
+    onAdd: (IngredientQuery) -> Unit,
+    onSearch: (query: IngredientQuery) -> List<IngredientQuery>,
     isShown: Boolean
 ) {
     // TODO: improve UI
-    val query = remember { mutableStateOf("") }
+    val rawQuery = remember { mutableStateOf("") }
+    val query = remember(rawQuery.value) {
+        IngredientQuery.parse(rawQuery.value)
+    }
     val showResults = remember { mutableStateOf(false) }
 
     when (isShown) {
@@ -58,9 +62,9 @@ fun IngredientSearchDialog(
                             SearchBar(
                                 inputField = {
                                     SearchBarDefaults.InputField(
-                                        query = query.value,
+                                        query = rawQuery.value,
                                         onQueryChange = {
-                                            query.value = it
+                                            rawQuery.value = it
                                             if(it.isNotBlank())
                                                 showResults.value = true
                                         },
@@ -104,20 +108,19 @@ fun IngredientSearchDialog(
                                         verticalArrangement = Arrangement.spacedBy(0.dp)
                                     ) {
                                         items(
-                                            items = onSearch(query.value)
+                                            items = onSearch(query)
                                         ) { item ->
                                             DropdownMenuItem(
                                                 text = {
-                                                    Text(item)
+                                                    Text("${item.product} ${item.amount ?:""} ${item.unit ?: ""}")
                                                },
                                                 onClick = {
-                                                    // TODO: add ingredient quantity support
                                                     onAdd(item)
                                                     showResults.value = false
-                                                    query.value = ""
+                                                    rawQuery.value = ""
                                                 },
                                                 leadingIcon = {
-                                                    if(selected.any { it.name == item })
+                                                    if(selected.any { it.ingredient.name == item.product })
                                                         Icon(
                                                             Icons.Filled.Check,
                                                             "Ingredient added"
@@ -146,7 +149,8 @@ fun IngredientSearchDialog(
                                     ) { ingredient ->
                                         Text(
                                             modifier = Modifier.padding(16.dp),
-                                            text = ingredient.name
+                                            // TODO: add unit display
+                                            text = ingredient.ingredient.name
                                         )
                                     }
                                     item {

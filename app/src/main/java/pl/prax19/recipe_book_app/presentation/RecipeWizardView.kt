@@ -57,7 +57,6 @@ fun RecipeWizardView(
             showIngredientSearchDialog.value = false
         },
         onAdd = { ingredient ->
-            // TODO: add ingredient quantity support
             viewModel.addIngredient(ingredient)
         },
         onSearch = { query ->
@@ -165,7 +164,8 @@ fun RecipeWizardView(
                         label = {
                             Text("Ingredients")
                         },
-                        value = state.ingredients.joinToString(separator = "\n") { it.name },
+                        // TODO: add ingredient displaying
+                        value = state.ingredients.joinToString(separator = "\n") { it.ingredient.name },
                         onValueChange = {},
                         placeholder = {
                             Text("No ingredients")

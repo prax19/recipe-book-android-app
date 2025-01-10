@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import pl.prax19.recipe_book_app.data.database.RecipeRepository
 import pl.prax19.recipe_book_app.data.model.Ingredient
 import pl.prax19.recipe_book_app.data.model.Recipe
+import pl.prax19.recipe_book_app.data.model.RecipeIngredient
+import pl.prax19.recipe_book_app.utils.IngredientQuery
 import java.util.UUID
 import javax.inject.Inject
 
@@ -30,9 +32,10 @@ class RecipeWizardViewModel @Inject constructor(
 
     fun saveRecipe() {
         viewModelScope.launch {
+            // TODO: add recipe ingredient saving
             recipeRepository.addRecipe(
                 Recipe(
-                    id = state.value.id ?: UUID.randomUUID(),
+                    id = state.value.id,
                     name = state.value.name,
                     description = state.value.description,
                     source = state.value.source
@@ -41,29 +44,43 @@ class RecipeWizardViewModel @Inject constructor(
         }
     }
 
-    fun getIngredientSearchQueryResponse(query: String): List<String> {
+    fun getIngredientSearchQueryResponse(query: IngredientQuery): List<IngredientQuery> {
         // TODO: optimize
         var matchingIngredients = state.value.availableIngredients.filter {
-            it.name.contains(query)
+            it.name.contains(query.product)
         }
-        if(state.value.availableIngredients.none { it.name == query })
-            matchingIngredients = listOf(Ingredient(name = query)) + matchingIngredients
-        return matchingIngredients.filterNot { it.name in listOf("") }.map { it.name }
+        if(state.value.availableIngredients.none { it.name == query.product })
+            matchingIngredients = listOf(Ingredient(name = query.product)) + matchingIngredients
+        return matchingIngredients
+            .filterNot { it.name in listOf("") }
+            .map { IngredientQuery(it.name, query.amount, query.unit) }
     }
 
     fun findIngredientByName(name: String): Ingredient? {
         return state.value.availableIngredients.find { it.name == name }
     }
 
-    fun addIngredient(name: String) {
+    fun addIngredient(rawIngredient: IngredientQuery) {
         // TODO: add quantity support
         viewModelScope.launch {
-            findIngredientByName(name)?.let { ingredient ->
-                _state.update { it.copy(ingredients = it.ingredients + ingredient) }
+            findIngredientByName(rawIngredient.product)?.let { ingredient ->
+                val recipeIngredient = RecipeIngredient(
+                    ingredient = ingredient,
+                    recipeId = state.value.id,
+                    unit = rawIngredient.unit,
+                    amount = rawIngredient.amount
+                )
+                _state.update { it.copy(ingredients = it.ingredients + recipeIngredient) }
             } ?: run {
-                val newIngredient = Ingredient(name = name)
+                val newIngredient = Ingredient(name = rawIngredient.product)
                 createIngredient(newIngredient)
-                _state.update { it.copy(ingredients = it.ingredients + newIngredient) }
+                val recipeIngredient = RecipeIngredient(
+                    ingredient = newIngredient,
+                    recipeId = state.value.id,
+                    unit = rawIngredient.unit,
+                    amount = rawIngredient.amount
+                )
+                _state.update { it.copy(ingredients = it.ingredients + recipeIngredient) }
             }
         }
     }
@@ -89,11 +106,11 @@ class RecipeWizardViewModel @Inject constructor(
 
     data class ViewState(
         val availableIngredients: List<Ingredient> = emptyList(),
-        val id: UUID ?= null,
+        val id: UUID = UUID.randomUUID(),
         val name: String = "",
         val description: String ?= null,
         val source: String ?= null,
-        val ingredients: List<Ingredient> = emptyList(),
+        val ingredients: List<RecipeIngredient> = emptyList(),
     )
 
 }

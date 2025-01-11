@@ -18,6 +18,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +54,8 @@ fun RecipeWizardView(
 
     val showIngredientSearchDialog = remember { mutableStateOf(false) }
     val showStepsDialog = remember { mutableStateOf(false) }
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     IngredientSearchDialog(
         selected = state.ingredients,
@@ -82,6 +87,7 @@ fun RecipeWizardView(
         topBar = {
             LargeTopAppBar(
                 title = { Text("Dish recipe") },
+                scrollBehavior = scrollBehavior,
                 actions = {
                     TextButton(
                         modifier = Modifier
@@ -115,7 +121,10 @@ fun RecipeWizardView(
         },
         content = {
             LazyColumn(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
                 contentPadding = it,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -184,9 +193,6 @@ fun RecipeWizardView(
                                 "${ing.amount} ${ing.unit} ${ing.ingredient.name}"
                          },
                         onValueChange = {},
-                        placeholder = {
-                            Text("No ingredients")
-                        },
                         readOnly = true
                     )
                 }
@@ -205,14 +211,12 @@ fun RecipeWizardView(
                         label = {
                             Text("Steps")
                         },
-                        value = state.steps.joinToString(separator = "\n") {
+                        value = state.steps.joinToString(separator = "\n\n") {
                             "${it.stepIndex + 1}. ${it.description}"
                         },
                         onValueChange = {},
-                        placeholder = {
-                            Text("No steps")
-                        },
-                        readOnly = true
+                        readOnly = true,
+                        maxLines = 5
                     )
                 }
                 item {

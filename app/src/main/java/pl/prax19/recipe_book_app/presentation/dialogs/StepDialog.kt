@@ -53,7 +53,7 @@ fun StepDialog(
                     decorFitsSystemWindows = false,
                     usePlatformDefaultWidth = false
                 ),
-                onDismissRequest = { onClose(splitInput) },
+                onDismissRequest = { onClose(splitInput.filterNot { it.isBlank() }) },
                 content = {
                     Surface (
                         modifier = Modifier.fillMaxSize(),

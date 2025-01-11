@@ -44,7 +44,8 @@ fun IngredientSearchDialog(
     // TODO: improve UI
     val rawQuery = remember { mutableStateOf("") }
     val query = remember(rawQuery.value) {
-        IngredientQuery.parse(rawQuery.value)
+        // TODO: improve
+        IngredientQuery.parse(rawQuery.value) ?: IngredientQuery(rawQuery.value, null, null)
     }
     val showResults = remember { mutableStateOf(false) }
 
@@ -149,8 +150,11 @@ fun IngredientSearchDialog(
                                     ) { ingredient ->
                                         Text(
                                             modifier = Modifier.padding(16.dp),
-                                            // TODO: add unit display
-                                            text = ingredient.ingredient.name
+                                            text =
+                                                if(ingredient.amount == null)
+                                                    ingredient.ingredient.name
+                                                else
+                                                    "${ingredient.amount} ${ingredient.unit} ${ingredient.ingredient.name}"
                                         )
                                     }
                                     item {

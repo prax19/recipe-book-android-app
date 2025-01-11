@@ -164,8 +164,12 @@ fun RecipeWizardView(
                         label = {
                             Text("Ingredients")
                         },
-                        // TODO: add ingredient displaying
-                        value = state.ingredients.joinToString(separator = "\n") { it.ingredient.name },
+                        value = state.ingredients.joinToString(separator = "\n") { ing ->
+                            if (ing.amount == null)
+                                ing.ingredient.name
+                            else
+                                "${ing.amount} ${ing.unit} ${ing.ingredient.name}"
+                         },
                         onValueChange = {},
                         placeholder = {
                             Text("No ingredients")

@@ -13,6 +13,7 @@ import pl.prax19.recipe_book_app.data.database.RecipeRepository
 import pl.prax19.recipe_book_app.data.model.Ingredient
 import pl.prax19.recipe_book_app.data.model.Recipe
 import pl.prax19.recipe_book_app.data.model.RecipeIngredient
+import pl.prax19.recipe_book_app.data.model.RecipeStep
 import pl.prax19.recipe_book_app.utils.IngredientQuery
 import java.util.UUID
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class RecipeWizardViewModel @Inject constructor(
     fun saveRecipe() {
         viewModelScope.launch {
             // TODO: add recipe ingredient saving
+            // TODO: add recipe steps saving
             recipeRepository.addRecipe(
                 Recipe(
                     id = state.value.id,
@@ -107,6 +109,20 @@ class RecipeWizardViewModel @Inject constructor(
         _state.update { it.copy(description = description) }
     }
 
+    fun updateSteps(steps: List<String>) {
+        _state.update {
+            it.copy(
+                steps = steps.mapIndexed() { index, step ->
+                    RecipeStep(
+                        recipeId = it.id,
+                        stepIndex = index,
+                        description = step
+                    )
+                }
+            )
+        }
+    }
+
     fun updateSource(source: String) {
         _state.update { it.copy(source = source) }
     }
@@ -118,6 +134,7 @@ class RecipeWizardViewModel @Inject constructor(
         val description: String ?= null,
         val source: String ?= null,
         val ingredients: List<RecipeIngredient> = emptyList(),
+        val steps: List<RecipeStep> = emptyList()
     )
 
 }

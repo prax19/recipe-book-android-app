@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import pl.prax19.recipe_book_app.presentation.dialogs.IngredientSearchDialog
+import pl.prax19.recipe_book_app.presentation.dialogs.StepDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +50,7 @@ fun RecipeWizardView(
     val nextButtonFocusRequester = remember { FocusRequester() }
 
     val showIngredientSearchDialog = remember { mutableStateOf(false) }
-    val showStepsSearchDialog = remember { mutableStateOf(false) }
+    val showStepsDialog = remember { mutableStateOf(false) }
 
     IngredientSearchDialog(
         selected = state.ingredients,
@@ -66,6 +67,15 @@ fun RecipeWizardView(
             viewModel.getIngredientSearchQueryResponse(query)
         },
         isShown = showIngredientSearchDialog.value
+    )
+
+    StepDialog(
+        steps = state.steps,
+        onClose = { steps ->
+            viewModel.updateSteps(steps)
+            showStepsDialog.value = false
+        },
+        isShown = showStepsDialog.value
     )
 
     Scaffold(
@@ -188,20 +198,21 @@ fun RecipeWizardView(
                             .focusRequester(stepsFocusRequester)
                             .onFocusEvent {
                                 if (it.isFocused) {
-                                    showStepsSearchDialog.value = true
-                                    ingredientsFocusRequester.freeFocus()
+                                    showStepsDialog.value = true
+                                    stepsFocusRequester.freeFocus()
                                 }
                             },
                         label = {
                             Text("Steps")
                         },
-                        value = "",
+                        value = state.steps.joinToString(separator = "\n") {
+                            "${it.stepIndex + 1}. ${it.description}"
+                        },
                         onValueChange = {},
                         placeholder = {
                             Text("No steps")
                         },
-                        readOnly = true,
-                        enabled = false
+                        readOnly = true
                     )
                 }
                 item {

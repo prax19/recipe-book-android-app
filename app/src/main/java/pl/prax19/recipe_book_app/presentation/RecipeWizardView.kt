@@ -59,6 +59,9 @@ fun RecipeWizardView(
         onAdd = { ingredient ->
             viewModel.addIngredient(ingredient)
         },
+        onRemove = { ingredient ->
+            viewModel.removeIngredient(ingredient)
+        },
         onSearch = { query ->
             viewModel.getIngredientSearchQueryResponse(query)
         },

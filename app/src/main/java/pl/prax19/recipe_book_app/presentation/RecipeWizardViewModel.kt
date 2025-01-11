@@ -85,6 +85,13 @@ class RecipeWizardViewModel @Inject constructor(
         }
     }
 
+    fun removeIngredient(recipeIngredient: RecipeIngredient) {
+        viewModelScope.launch {
+            // TODO: add unused ingredient removal here
+            _state.update { it.copy(ingredients = it.ingredients - recipeIngredient) }
+        }
+    }
+
     fun createIngredient(ingredient: Ingredient) {
         viewModelScope.launch {
             if (state.value.availableIngredients.none { it.name == ingredient.name })

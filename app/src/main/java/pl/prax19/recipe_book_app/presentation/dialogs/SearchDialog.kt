@@ -1,6 +1,7 @@
 package pl.prax19.recipe_book_app.presentation.dialogs
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -109,6 +110,9 @@ fun IngredientSearchDialog(
 
                                 },
                                 content = {
+                                    BackHandler(showResults.value) {
+                                        showResults.value = false
+                                    }
                                     LazyColumn(
                                         contentPadding = PaddingValues(vertical =  16.dp),
                                         verticalArrangement = Arrangement.spacedBy(0.dp)

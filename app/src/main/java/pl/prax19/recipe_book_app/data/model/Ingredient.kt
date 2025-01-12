@@ -6,5 +6,5 @@ import java.util.UUID.randomUUID
 data class Ingredient(
     val id: UUID = randomUUID(),
     val name: String,
-    val defaultUnit: Unit ?= null
+    //val defaultUnit: String ?= null
 )

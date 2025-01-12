@@ -93,8 +93,6 @@ fun RecipeWizardView(
                         modifier = Modifier
                             .focusRequester(nextButtonFocusRequester),
                         onClick = {
-                            // TODO: add serializable data auto fetching
-                            // TODO: add automatic removal of unused ingredients
                             viewModel.saveRecipe()
                             onExit()
                         },
@@ -197,7 +195,6 @@ fun RecipeWizardView(
                     )
                 }
                 item {
-                    // TODO: add steps
                     OutlinedTextField(
                         modifier = Modifier
                             .fillMaxSize()

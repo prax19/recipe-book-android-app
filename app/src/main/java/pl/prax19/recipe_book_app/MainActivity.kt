@@ -13,9 +13,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pl.prax19.recipe_book_app.presentation.MainView
+import pl.prax19.recipe_book_app.presentation.RecipeDetailsView
 import pl.prax19.recipe_book_app.presentation.RecipeWizardView
 import pl.prax19.recipe_book_app.ui.theme.RecipeBookTheme
 import pl.prax19.recipe_book_app.utils.Screen
+import java.util.UUID
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,6 +40,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = Screen.MainView.route) {
                             MainView(
+                                onEnterRecipe = {
+                                    navController.navigate("${Screen.RecipeDetailsView.route}/${it}")
+                                },
                                 onAddRecipe = {
                                     navController.navigate(Screen.RecipeWizardView.route)
                                 }
@@ -49,6 +54,11 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 }
                             )
+                        }
+                        composable(route = "${Screen.RecipeDetailsView.route}/{recipeUUID}") {
+                            UUID.fromString(it.arguments?.getString("recipeUUID"))?.let {
+                                RecipeDetailsView()
+                            }
                         }
                     }
                 }

@@ -33,15 +33,15 @@ class RecipeWizardViewModel @Inject constructor(
 
     fun saveRecipe() {
         viewModelScope.launch {
-            // TODO: add recipe ingredient saving
-            // TODO: add recipe steps saving
-            recipeRepository.addRecipe(
-                Recipe(
+            recipeRepository.upsertRecipe(
+                recipe = Recipe(
                     id = state.value.id,
                     name = state.value.name,
                     description = state.value.description,
                     source = state.value.source
-                )
+                ),
+                ingredients = state.value.ingredients,
+                steps = state.value.steps
             )
         }
     }
@@ -63,7 +63,6 @@ class RecipeWizardViewModel @Inject constructor(
     }
 
     fun addIngredient(rawIngredient: IngredientQuery) {
-        // TODO: add quantity support
         viewModelScope.launch {
             findIngredientByName(rawIngredient.product)?.let { ingredient ->
                 val recipeIngredient = RecipeIngredient(
@@ -89,8 +88,8 @@ class RecipeWizardViewModel @Inject constructor(
 
     fun removeIngredient(recipeIngredient: RecipeIngredient) {
         viewModelScope.launch {
-            // TODO: add unused ingredient removal here
             _state.update { it.copy(ingredients = it.ingredients - recipeIngredient) }
+            recipeRepository.removeIngredientIfUnused(recipeIngredient.ingredient)
         }
     }
 

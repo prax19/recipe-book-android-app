@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import pl.prax19.recipe_book_app.data.database.RecipeRepository
 import pl.prax19.recipe_book_app.data.model.Recipe
 import pl.prax19.recipe_book_app.data.model.RecipeIngredient
@@ -45,7 +46,12 @@ class RecipeDetailsViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ViewState())
 
+    fun removeRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            recipeRepository.removeRecipeById(recipe.id)
+        }
 
+    }
 
     data class ViewState(
         val recipe: Recipe ?= null,

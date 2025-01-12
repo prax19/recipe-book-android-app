@@ -57,7 +57,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "${Screen.RecipeDetailsView.route}/{recipeUUID}") {
                             UUID.fromString(it.arguments?.getString("recipeUUID"))?.let {
-                                RecipeDetailsView()
+                                RecipeDetailsView(
+                                    onRecipeRemoval = {
+                                        navController.popBackStack()
+                                    }
+                                )
                             }
                         }
                     }

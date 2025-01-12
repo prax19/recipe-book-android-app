@@ -23,6 +23,8 @@ class RecipeRepository @Inject constructor(
         ingredients: List<RecipeIngredient> = emptyList(),
         steps: List<RecipeStep> = emptyList()
     ) {
+        recipeDao.removeRecipeIngredientsByRecipeId(recipe.id)
+        recipeDao.removeRecipeStepsByRecipeId(recipe.id)
         recipeDao.upsertRecipe(
             RecipeDTO(
                 id = recipe.id,
@@ -54,6 +56,18 @@ class RecipeRepository @Inject constructor(
         )
     }
 
+    suspend fun removeRecipeById(recipeId: UUID) {
+        recipeDao.removeRecipeById(recipeId)
+        val ingredients = getRecipeIngredientsByRecipeId(recipeId).first()
+
+        recipeDao.removeRecipeIngredientsByRecipeId(recipeId)
+        recipeDao.removeRecipeStepsByRecipeId(recipeId)
+
+        ingredients.forEach {
+            removeIngredientIfUnused(it.ingredient)
+        }
+    }
+
      fun getAllRecipes(): Flow<List<Recipe>> {
         val recipes = recipeDao.getAllRecipes()
         return recipes.map {
@@ -68,14 +82,18 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-    fun getRecipeById(recipeId: UUID): Flow<Recipe> {
+    fun getRecipeById(recipeId: UUID): Flow<Recipe?> {
         return recipeDao.getRecipeById(recipeId).map { recipe ->
-            Recipe(
-                id = recipe.id,
-                name = recipe.name,
-                description = recipe.description,
-                source = recipe.source
-            )
+            recipe?.let {
+                Recipe(
+                    id = recipe.id,
+                    name = recipe.name,
+                    description = recipe.description,
+                    source = recipe.source
+                )
+            } ?: run {
+                null
+            }
         }
     }
 
@@ -93,7 +111,7 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-    suspend fun removeRecipeIngredientByRecipeId(recipeId: UUID) {
+    suspend fun removeRecipeIngredientsByRecipeId(recipeId: UUID) {
         recipeDao.removeRecipeStepsByRecipeId(recipeId)
     }
 
@@ -143,12 +161,11 @@ class RecipeRepository @Inject constructor(
         }
     }
 
-    fun removeIngredientIfUnused(ingredient: Ingredient) {
-        recipeDao.doesIngredientExistInAnyRecipe(ingredient.id).map {
-            if (!it) {
-                recipeDao.removeIngredientById(ingredient.id)
-            }
-        }
+    suspend fun removeIngredientIfUnused(ingredient: Ingredient) {
+        val recipeIngredients = recipeDao.getAllRecipeIngredientsByIngredientId(ingredient.id).first()
+        if (recipeIngredients.isEmpty())
+            recipeDao.removeIngredientById(ingredient.id)
+
     }
 
 }

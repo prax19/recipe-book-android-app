@@ -17,11 +17,14 @@ interface RecipeDAO {
     @Upsert
     suspend fun upsertRecipe(recipe: RecipeDTO)
 
+    @Query("DELETE FROM recipes WHERE id = :recipeId")
+    suspend fun removeRecipeById(recipeId: UUID)
+
     @Query("SELECT * FROM recipes")
     fun getAllRecipes(): Flow<List<RecipeDTO>>
 
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
-    fun getRecipeById(recipeId: UUID): Flow<RecipeDTO>
+    fun getRecipeById(recipeId: UUID): Flow<RecipeDTO?>
 
     @Query("SELECT * FROM recipe_ingredients WHERE recipeId = :recipeId")
     fun getRecipeIngredientsByRecipeId(recipeId: UUID): Flow<List<RecipeIngredientDTO>>
@@ -65,6 +68,6 @@ interface RecipeDAO {
     @Query("DELETE FROM recipe_steps WHERE recipeId = :recipeId")
     suspend fun removeRecipeStepsByRecipeId(recipeId: UUID)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM recipe_ingredients WHERE ingredientId = :ingredientId)")
-    fun doesIngredientExistInAnyRecipe(ingredientId: UUID): Flow<Boolean>
+    @Query("SELECT * FROM recipe_ingredients WHERE ingredientId = :ingredientId")
+    fun getAllRecipeIngredientsByIngredientId(ingredientId: UUID): Flow<List<RecipeIngredientDTO>>
 }

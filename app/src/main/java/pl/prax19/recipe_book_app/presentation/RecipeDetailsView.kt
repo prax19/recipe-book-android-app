@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import pl.prax19.recipe_book_app.presentation.dialogs.CustomDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,14 +45,34 @@ fun RecipeDetailsView(
     val state by viewModel.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
     val isMenuExtended = remember { mutableStateOf(false) }
+    val isDeletionDialogShown = remember { mutableStateOf(false) }
+
+    if(isDeletionDialogShown.value)
+        CustomDialog(
+            dismissText = "Cancel",
+            acceptText = "Delete",
+            onDismiss = { isDeletionDialogShown.value = false },
+            onAccept = {
+                state.recipe?.let {
+                    onRecipeRemoval()
+                    viewModel.removeRecipe(it)
+                }
+            },
+            dialogTitle = "Delete recipe",
+            dialogText = "Are you sure you want to remove this recipe from your cookbook? This action is irreversible.",
+            icon = Icons.Filled.DeleteForever,
+            actionColor = MaterialTheme.colorScheme.error
+        )
 
     // TODO: improve UI
     Scaffold(
         topBar = {
             LargeTopAppBar(
                 title = {
-                    Text(state.recipe?.name ?: "Error")
+                    // TODO: handle no recipe state
+                    Text(state.recipe?.name ?: "")
                 },
                 actions = {
                     IconButton(
@@ -62,15 +84,19 @@ fun RecipeDetailsView(
                         onDismissRequest = { isMenuExtended.value = false },
                         content = {
                             DropdownMenuItem(
-                                text = { Text("Delete") },
+                                text = { Text("Edit recipe") },
+                                leadingIcon = { Icon(Icons.Filled.Edit, "Edit recipe")  },
+                                onClick = {
+                                    // TODO: add edition function
+                                },
+                                enabled = false
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Delete recipe") },
                                 leadingIcon = { Icon(Icons.Filled.DeleteForever, "Delete recipe")  },
                                 onClick = {
-                                    // TODO: add dialog
-                                    state.recipe?.let {
-                                        onRecipeRemoval()
-                                        isMenuExtended.value = false
-                                        viewModel.removeRecipe(it)
-                                    }
+                                    isMenuExtended.value = false
+                                    isDeletionDialogShown.value = true
                                 }
                             )
                         }
@@ -87,15 +113,28 @@ fun RecipeDetailsView(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
                 contentPadding = PaddingValues(16.dp),
                 content = {
+                    state.recipe?.description?.let {
+                        item {
+                            Text(
+                                modifier = Modifier.animateItem(),
+                                text = state.recipe?.description ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            Spacer(modifier = Modifier.padding(16.dp))
+                        }
+                    }
                     items(
                         items = state.ingredients,
                         key = { ingredient -> ingredient.id }
                     ) { ingredient ->
-                        Row {
+                        Row (
+                            modifier = Modifier.animateItem()
+                        ){
                             if (ingredient.amount != null)
                                 Text(
                                     text = "${ingredient.amount.toInt()} ${ingredient.unit} ",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             Text(
                                 text = "${ingredient.ingredient.name} "
@@ -110,15 +149,28 @@ fun RecipeDetailsView(
                         key = { step -> step.id }
                     ) {
                         Row(
+                            modifier = Modifier.animateItem(),
                             verticalAlignment = Alignment.Top
                         ) {
                             Text(
                                 text = "${it.stepIndex + 1}. ",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.secondary
                             )
                             Text(text = it.description)
                         }
                         Spacer(modifier = Modifier.padding(8.dp))
+                    }
+                    state.recipe?.source?.let {
+                        item {
+                            // TODO: make link clickable
+                            Text(
+                                modifier = Modifier.animateItem(),
+                                text = state.recipe?.source ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.padding(16.dp))
+                        }
                     }
                 }
             )

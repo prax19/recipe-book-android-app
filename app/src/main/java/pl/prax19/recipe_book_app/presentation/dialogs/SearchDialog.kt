@@ -47,7 +47,7 @@ fun IngredientSearchDialog(
     onSearch: (query: IngredientQuery) -> List<IngredientQuery>,
     isShown: Boolean
 ) {
-    // TODO: improve UI
+    // TODO: improve UI, replace plain dialog with bottom sheet
     val rawQuery = remember { mutableStateOf("") }
     val query = remember(rawQuery.value) {
         // TODO: improve
@@ -69,6 +69,8 @@ fun IngredientSearchDialog(
                             SearchBar(
                                 inputField = {
                                     SearchBarDefaults.InputField(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
                                         query = rawQuery.value,
                                         onQueryChange = {
                                             rawQuery.value = it

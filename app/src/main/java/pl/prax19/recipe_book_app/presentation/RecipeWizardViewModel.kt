@@ -78,9 +78,14 @@ class RecipeWizardViewModel @Inject constructor(
                 ingredients = state.value.ingredients,
                 steps = state.value.steps
             )
-            state.value.removedIngredients.forEach {
-                recipeRepository.removeIngredientIfUnused(it)
-            }
+            flushAllUnusedIngredients(state.value.removedIngredients)
+        }
+    }
+
+    fun cancelRecipeSaving() {
+        viewModelScope.launch {
+            flushAllUnusedIngredients(state.value.ingredients.map { it.ingredient })
+            flushAllUnusedIngredients(state.value.removedIngredients)
         }
     }
 
@@ -133,7 +138,7 @@ class RecipeWizardViewModel @Inject constructor(
         }
     }
 
-    fun removeIngredientIfUnused(recipeIngredient: RecipeIngredient) {
+    fun removeIngredient(recipeIngredient: RecipeIngredient) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -141,7 +146,14 @@ class RecipeWizardViewModel @Inject constructor(
                     removedIngredients = it.removedIngredients + recipeIngredient.ingredient
                 )
             }
+        }
+    }
 
+    fun flushAllUnusedIngredients(ingredients: List<Ingredient>) {
+        viewModelScope.launch {
+            ingredients.forEach {
+                recipeRepository.removeIngredientIfUnused(it)
+            }
         }
     }
 

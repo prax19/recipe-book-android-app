@@ -1,6 +1,7 @@
 package pl.prax19.recipe_book_app.presentation
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -57,6 +58,11 @@ fun RecipeWizardView(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    BackHandler {
+        onExit()
+        viewModel.cancelRecipeSaving()
+    }
+
     IngredientSearchDialog(
         selected = state.ingredients,
         onClose = {
@@ -66,7 +72,7 @@ fun RecipeWizardView(
             viewModel.addIngredient(ingredient)
         },
         onRemove = { ingredient ->
-            viewModel.removeIngredientIfUnused(ingredient)
+            viewModel.removeIngredient(ingredient)
         },
         onSearch = { query ->
             viewModel.getIngredientSearchQueryResponse(query)
@@ -109,6 +115,7 @@ fun RecipeWizardView(
                     IconButton(
                         onClick = {
                             onExit()
+                            viewModel.cancelRecipeSaving()
                         },
                         content = {
                             Icon(

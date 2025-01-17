@@ -12,12 +12,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.NoMeals
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -73,21 +74,35 @@ fun MainView(
                             .fillMaxSize().padding(it)
                             .nestedScroll(scrollBehavior.nestedScrollConnection),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         content = {
                             items(
                                 items = state.recipes,
                                 key = { it.id }
                             ) { recipe ->
-                                OutlinedCard (
+                                Card (
                                     modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.elevatedCardColors(),
                                     onClick = {
                                         onEnterRecipe(recipe.id)
                                     },
                                     content = {
-                                        Text(
-                                            text = recipe.name,
-                                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        Column(
+                                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                                            content = {
+                                                Text(
+                                                    text = recipe.name,
+                                                )
+                                                recipe.description?.let {
+                                                    Text(
+                                                        text = it,
+                                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.secondary
+                                                    )
+                                                }
+                                            }
                                         )
                                     }
                                 )

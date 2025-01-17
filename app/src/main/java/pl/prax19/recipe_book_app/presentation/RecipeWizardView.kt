@@ -11,10 +11,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -34,6 +37,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import pl.prax19.recipe_book_app.presentation.dialogs.CustomDialog
 import pl.prax19.recipe_book_app.presentation.dialogs.IngredientSearchDialog
 import pl.prax19.recipe_book_app.presentation.dialogs.StepDialog
 
@@ -53,32 +57,31 @@ fun RecipeWizardView(
     val stepsFocusRequester = remember { FocusRequester() }
     val nextButtonFocusRequester = remember { FocusRequester() }
 
-    val showIngredientSearchDialog = remember { mutableStateOf(false) }
+    var showIngredientSearchDialog by remember { mutableStateOf(false) }
+
     val showStepsDialog = remember { mutableStateOf(false) }
+    val showExitDialog = remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     BackHandler {
-        onExit()
-        viewModel.cancelRecipeSaving()
+        showExitDialog.value = true
     }
 
-    IngredientSearchDialog(
-        selected = state.ingredients,
-        onClose = {
-            showIngredientSearchDialog.value = false
-        },
-        onAdd = { ingredient ->
-            viewModel.addIngredient(ingredient)
-        },
-        onRemove = { ingredient ->
-            viewModel.removeIngredient(ingredient)
-        },
-        onSearch = { query ->
-            viewModel.getIngredientSearchQueryResponse(query)
-        },
-        isShown = showIngredientSearchDialog.value
-    )
+    if(showExitDialog.value)
+        CustomDialog(
+            dismissText = "Cancel",
+            acceptText = "Exit without saving",
+            onDismiss = { showExitDialog.value = false },
+            onAccept = {
+                onExit()
+                viewModel.cancelRecipeSaving()
+            },
+            dialogTitle = "Unsaved recipe",
+            dialogText = "Are you sure you want to exit recipe creator without saving?",
+            icon = Icons.Outlined.Warning,
+            actionColor = MaterialTheme.colorScheme.error
+        )
 
     StepDialog(
         rawSteps = state.rawSteps,
@@ -90,6 +93,23 @@ fun RecipeWizardView(
             showStepsDialog.value = false
         },
         isShown = showStepsDialog.value
+    )
+
+    IngredientSearchDialog(
+        selected = state.ingredients,
+        onClose = {
+            showIngredientSearchDialog = false
+        },
+        onAdd = { ingredient ->
+            viewModel.addIngredient(ingredient)
+        },
+        onRemove = { ingredient ->
+            viewModel.removeIngredient(ingredient)
+        },
+        onSearch = { query ->
+            viewModel.getIngredientSearchQueryResponse(query)
+        },
+        isShown = showIngredientSearchDialog
     )
 
     Scaffold(
@@ -114,8 +134,7 @@ fun RecipeWizardView(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            onExit()
-                            viewModel.cancelRecipeSaving()
+                            showExitDialog.value = true
                         },
                         content = {
                             Icon(
@@ -187,7 +206,7 @@ fun RecipeWizardView(
                             .focusRequester(ingredientsFocusRequester)
                             .onFocusEvent {
                                 if (it.isFocused) {
-                                    showIngredientSearchDialog.value = true
+                                    showIngredientSearchDialog = true
                                     ingredientsFocusRequester.freeFocus()
                                 }
                             },
@@ -201,7 +220,8 @@ fun RecipeWizardView(
                                 "${ing.amount} ${ing.unit} ${ing.ingredient.name}"
                          },
                         onValueChange = {},
-                        readOnly = true
+                        readOnly = true,
+                        enabled = !showIngredientSearchDialog
                     )
                 }
                 item {

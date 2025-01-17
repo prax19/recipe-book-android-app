@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import pl.prax19.recipe_book_app.presentation.dialogs.CustomDialog
@@ -41,6 +43,8 @@ fun RecipeDetailsView(
     onRecipeEdition: () -> Unit
 ) {
 
+    val uriHandler = LocalUriHandler.current
+
     val viewModel: RecipeDetailsViewModel = hiltViewModel()
 
     val state by viewModel.state.collectAsState()
@@ -49,6 +53,19 @@ fun RecipeDetailsView(
 
     val isMenuExtended = remember { mutableStateOf(false) }
     val isDeletionDialogShown = remember { mutableStateOf(false) }
+
+    val onOpenSource: () -> Unit = {
+        state.recipe?.source?.let {
+            try {
+                val url =
+                    if (it.startsWith("http://") || it.startsWith("https://")) it else "https://$it"
+                uriHandler.openUri(url)
+            } catch (e: IllegalArgumentException) {
+                // TODO: handle uri error
+                e.printStackTrace()
+            }
+        }
+    }
 
     if(isDeletionDialogShown.value)
         CustomDialog(
@@ -88,6 +105,7 @@ fun RecipeDetailsView(
                                 text = { Text("Edit recipe") },
                                 leadingIcon = { Icon(Icons.Filled.Edit, "Edit recipe")  },
                                 onClick = {
+                                    isMenuExtended.value = false
                                     state.recipe?.let {
                                         onRecipeEdition()
                                     }
@@ -97,9 +115,16 @@ fun RecipeDetailsView(
                                 text = { Text("Delete recipe") },
                                 leadingIcon = { Icon(Icons.Filled.DeleteForever, "Delete recipe")  },
                                 onClick = {
-                                    isMenuExtended.value = false
                                     isDeletionDialogShown.value = true
                                 }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Open source") },
+                                leadingIcon = { Icon(Icons.Filled.Link, "Open source")  },
+                                onClick = {
+                                    onOpenSource()
+                                },
+                                enabled = state.recipe?.source != null
                             )
                         }
                     )
@@ -161,18 +186,6 @@ fun RecipeDetailsView(
                             Text(text = it.description)
                         }
                         Spacer(modifier = Modifier.padding(8.dp))
-                    }
-                    state.recipe?.source?.let {
-                        item {
-                            // TODO: make link clickable
-                            Text(
-                                modifier = Modifier.animateItem(),
-                                text = state.recipe?.source ?: "",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.padding(16.dp))
-                        }
                     }
                 }
             )

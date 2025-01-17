@@ -169,7 +169,7 @@ class RecipeWizardViewModel @Inject constructor(
     }
 
     fun updateDescription(description: String) {
-        _state.update { it.copy(description = description) }
+        _state.update { it.copy(description = description.ifBlank { null }) }
     }
 
     fun updateRawSteps(steps: String) {
@@ -197,7 +197,7 @@ class RecipeWizardViewModel @Inject constructor(
     }
 
     fun updateSource(source: String) {
-        _state.update { it.copy(source = source) }
+        _state.update { it.copy(source = source.ifBlank { null }) }
     }
 
     data class ViewState(

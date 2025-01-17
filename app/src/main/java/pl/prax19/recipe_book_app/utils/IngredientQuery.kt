@@ -8,10 +8,10 @@ data class IngredientQuery(
 
     companion object {
 
-        fun parse(query: String): IngredientQuery? {
+        fun parse(query: String): IngredientQuery {
             val regex = Regex("""(\d+\.?\d*)\s*([a-zA-Z]+)\s*(.+?)\s*$|(.+?)\s+(\d+\.?\d*)\s*([a-zA-Z]+)""")
 
-            val matchResult = regex.matchEntire(query)
+            val matchResult = regex.matchEntire(query.trim())
             return if (matchResult != null) {
                 val (amount1, unit1, name1, name2, amount2, unit2) = matchResult.destructured
                 if (amount1.isNotEmpty() && unit1.isNotEmpty()) {
@@ -19,10 +19,10 @@ data class IngredientQuery(
                 } else if (amount2.isNotEmpty() && unit2.isNotEmpty()) {
                     IngredientQuery(name2.trim(), amount2.toDouble(), unit2)
                 } else {
-                    null
+                    IngredientQuery(query.trim(), null, null)
                 }
             } else {
-                null
+                return IngredientQuery(query.trim(), null, null)
             }
 
         }

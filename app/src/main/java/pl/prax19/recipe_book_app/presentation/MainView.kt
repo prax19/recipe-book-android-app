@@ -97,6 +97,7 @@ fun MainView(
                 }
                 false -> {
                     //TODO: fix flicking bug when list is loading
+                    //TODO: fix no top app bar collapsing after deletion
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,

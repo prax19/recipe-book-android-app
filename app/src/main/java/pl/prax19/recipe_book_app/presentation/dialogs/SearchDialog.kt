@@ -51,7 +51,7 @@ fun IngredientSearchDialog(
     val rawQuery = remember { mutableStateOf("") }
     val query = remember(rawQuery.value) {
         // TODO: improve
-        IngredientQuery.parse(rawQuery.value) ?: IngredientQuery(rawQuery.value, null, null)
+        IngredientQuery.parse(rawQuery.value)
     }
     val showResults = remember { mutableStateOf(false) }
 

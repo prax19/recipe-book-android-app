@@ -1,11 +1,13 @@
 package pl.prax19.recipe_book_app.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,16 +22,49 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeWizardViewModel @Inject constructor(
-    private val recipeRepository: RecipeRepository
+    private val recipeRepository: RecipeRepository,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private val _state = MutableStateFlow(ViewState())
+    private val editionUuid = savedStateHandle.get<String>("recipeUUID")
+
+    private val _state = MutableStateFlow(
+        ViewState()
+    )
     private val _existingIngredients = recipeRepository.getAllIngredients()
     val state = combine(_state, _existingIngredients) { state, availableIngredients ->
         state.copy(
             availableIngredients = availableIngredients
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ViewState())
+
+    init {
+        viewModelScope.launch {
+            editionUuid?.let {
+                recipeRepository.getRecipeById(UUID.fromString(it)).firstOrNull()?.let { recipe ->
+                    _state.update {
+                        it.copy(
+                            id = recipe.id,
+                            name = recipe.name,
+                            description = recipe.description,
+                            source = recipe.source
+                        )
+                    }
+                    recipeRepository.getRecipeIngredientsByRecipeId(recipe.id).firstOrNull()?.let { ingredients ->
+                        _state.update { it.copy(ingredients = ingredients) }
+                    }
+                    recipeRepository.getRecipeStepsByRecipeId(recipe.id).firstOrNull()?.let { steps ->
+                        _state.update {
+                            it.copy(
+                                steps = steps,
+                                rawSteps = steps.joinToString("\n") { it.description }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun saveRecipe() {
         viewModelScope.launch {
@@ -43,6 +78,9 @@ class RecipeWizardViewModel @Inject constructor(
                 ingredients = state.value.ingredients,
                 steps = state.value.steps
             )
+            state.value.removedIngredients.forEach {
+                recipeRepository.removeIngredientIfUnused(it)
+            }
         }
     }
 
@@ -71,7 +109,12 @@ class RecipeWizardViewModel @Inject constructor(
                     unit = rawIngredient.unit,
                     amount = rawIngredient.amount
                 )
-                _state.update { it.copy(ingredients = it.ingredients + recipeIngredient) }
+                _state.update {
+                    it.copy(
+                        ingredients = it.ingredients + recipeIngredient,
+                        removedIngredients = it.removedIngredients - ingredient
+                    )
+                }
             } ?: run {
                 val newIngredient = Ingredient(name = rawIngredient.product)
                 createIngredient(newIngredient)
@@ -81,15 +124,24 @@ class RecipeWizardViewModel @Inject constructor(
                     unit = rawIngredient.unit,
                     amount = rawIngredient.amount
                 )
-                _state.update { it.copy(ingredients = it.ingredients + recipeIngredient) }
+                _state.update {
+                    it.copy(
+                        ingredients = it.ingredients + recipeIngredient
+                    )
+                }
             }
         }
     }
 
-    fun removeIngredient(recipeIngredient: RecipeIngredient) {
+    fun removeIngredientIfUnused(recipeIngredient: RecipeIngredient) {
         viewModelScope.launch {
-            _state.update { it.copy(ingredients = it.ingredients - recipeIngredient) }
-            recipeRepository.removeIngredientIfUnused(recipeIngredient.ingredient)
+            _state.update {
+                it.copy(
+                    ingredients = it.ingredients - recipeIngredient,
+                    removedIngredients = it.removedIngredients + recipeIngredient.ingredient
+                )
+            }
+
         }
     }
 
@@ -108,7 +160,17 @@ class RecipeWizardViewModel @Inject constructor(
         _state.update { it.copy(description = description) }
     }
 
-    fun updateSteps(steps: List<String>) {
+    fun updateRawSteps(steps: String) {
+        _state.update { it.copy(rawSteps = steps) }
+    }
+
+    fun updateSteps() {
+        updateSteps(
+            state.value.rawSteps.split("\n").filterNot { it.isBlank() }
+        )
+    }
+
+    private fun updateSteps(steps: List<String>) {
         _state.update {
             it.copy(
                 steps = steps.mapIndexed() { index, step ->
@@ -128,6 +190,8 @@ class RecipeWizardViewModel @Inject constructor(
 
     data class ViewState(
         val availableIngredients: List<Ingredient> = emptyList(),
+        val removedIngredients: List<Ingredient> = emptyList(),
+        val rawSteps: String = "",
         val id: UUID = UUID.randomUUID(),
         val name: String = "",
         val description: String ?= null,

@@ -24,6 +24,7 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ViewState())
 
+    //TODO: handle no recipe state
     private val recipeUUID = UUID.fromString(savedStateHandle.get<String>("recipeUUID"))
 
     private val _recipe = recipeRepository.getRecipeById(
@@ -46,9 +47,11 @@ class RecipeDetailsViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ViewState())
 
-    fun removeRecipe(recipe: Recipe) {
+    fun removeRecipe() {
         viewModelScope.launch {
-            recipeRepository.removeRecipeById(recipe.id)
+            state.value.recipe?.let {
+                recipeRepository.removeRecipeById(it.id)
+            }
         }
 
     }

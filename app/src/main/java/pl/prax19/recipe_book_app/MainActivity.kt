@@ -55,11 +55,23 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        composable(route = Screen.RecipeWizardView.route + "/{recipeUUID}") {
+                            UUID.fromString(it.arguments?.getString("recipeUUID"))?.let {
+                                RecipeWizardView(
+                                    onExit = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
+                        }
                         composable(route = "${Screen.RecipeDetailsView.route}/{recipeUUID}") {
                             UUID.fromString(it.arguments?.getString("recipeUUID"))?.let {
                                 RecipeDetailsView(
                                     onRecipeRemoval = {
                                         navController.popBackStack()
+                                    },
+                                    onRecipeEdition = {
+                                        navController.navigate("${Screen.RecipeWizardView.route}/${it}")
                                     }
                                 )
                             }

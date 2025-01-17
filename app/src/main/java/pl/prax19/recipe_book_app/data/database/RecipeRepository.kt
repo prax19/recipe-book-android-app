@@ -165,7 +165,6 @@ class RecipeRepository @Inject constructor(
         val recipeIngredients = recipeDao.getAllRecipeIngredientsByIngredientId(ingredient.id).first()
         if (recipeIngredients.isEmpty())
             recipeDao.removeIngredientById(ingredient.id)
-
     }
 
 }

@@ -37,7 +37,8 @@ import pl.prax19.recipe_book_app.presentation.dialogs.CustomDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetailsView(
-    onRecipeRemoval: () -> Unit
+    onRecipeRemoval: () -> Unit,
+    onRecipeEdition: () -> Unit
 ) {
 
     val viewModel: RecipeDetailsViewModel = hiltViewModel()
@@ -57,7 +58,7 @@ fun RecipeDetailsView(
             onAccept = {
                 state.recipe?.let {
                     onRecipeRemoval()
-                    viewModel.removeRecipe(it)
+                    viewModel.removeRecipe()
                 }
             },
             dialogTitle = "Delete recipe",
@@ -87,9 +88,10 @@ fun RecipeDetailsView(
                                 text = { Text("Edit recipe") },
                                 leadingIcon = { Icon(Icons.Filled.Edit, "Edit recipe")  },
                                 onClick = {
-                                    // TODO: add edition function
-                                },
-                                enabled = false
+                                    state.recipe?.let {
+                                        onRecipeEdition()
+                                    }
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text("Delete recipe") },

@@ -66,7 +66,7 @@ fun RecipeWizardView(
             viewModel.addIngredient(ingredient)
         },
         onRemove = { ingredient ->
-            viewModel.removeIngredient(ingredient)
+            viewModel.removeIngredientIfUnused(ingredient)
         },
         onSearch = { query ->
             viewModel.getIngredientSearchQueryResponse(query)
@@ -75,9 +75,12 @@ fun RecipeWizardView(
     )
 
     StepDialog(
-        steps = state.steps,
-        onClose = { steps ->
-            viewModel.updateSteps(steps)
+        rawSteps = state.rawSteps,
+        onValueChange = {
+            viewModel.updateRawSteps(it)
+        },
+        onClose = {
+            viewModel.updateSteps()
             showStepsDialog.value = false
         },
         isShown = showStepsDialog.value
